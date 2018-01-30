@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	flags "github.com/thbishop/github-commit-status/Godeps/_workspace/src/github.com/jessevdk/go-flags"
+	"github.com/jessevdk/go-flags"
 )
 
 type options struct {
@@ -59,11 +59,10 @@ func states() []string {
 }
 
 func validState(state string) bool {
-	valid := false
 	for _, s := range states() {
 		if state == s {
 			return true
 		}
 	}
-	return valid
+	return false
 }
