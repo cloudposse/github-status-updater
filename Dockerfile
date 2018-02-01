@@ -2,7 +2,7 @@ FROM golang:latest as builder
 RUN mkdir -p /go/src/github.com/codefresh-io/github-commit-status
 WORKDIR /go/src/github.com/codefresh-io/github-commit-status
 COPY . .
-RUN "./build/BUILD.sh"
+RUN CGO_ENABLED=0 go build -v -o "./dist/bin/github-commit-status" *.go
 
 
 FROM alpine:3.6
