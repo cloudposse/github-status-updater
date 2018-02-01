@@ -35,7 +35,7 @@ func newConfig() *config {
 		os.Exit(1)
 	}
 
-	if c.apiUrl == "" || c.apiToken == "" {
+	if c.apiToken == "" {
 		fmt.Printf("Error: GITHUB_TOKEN environment variable not specified")
 		os.Exit(1)
 	}

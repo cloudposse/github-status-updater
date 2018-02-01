@@ -2,9 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/jessevdk/go-flags"
 	"os"
-
-	"github.com/thbishop/github-commit-status/Godeps/_workspace/src/github.com/jessevdk/go-flags"
 )
 
 type options struct {
