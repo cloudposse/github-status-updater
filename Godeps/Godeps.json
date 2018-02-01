@@ -1,0 +1,14 @@
+{
+	"ImportPath": "github.com/thbishop/github-commit-status",
+	"GoVersion": "go1.4",
+	"Packages": [
+		"./github-commit-status/..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/jessevdk/go-flags",
+			"Comment": "v1-265-g1c87b97",
+			"Rev": "1c87b9727cd7c200be13a5d8280d7ea514469235"
+		}
+	]
+}
