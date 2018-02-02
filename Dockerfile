@@ -1,4 +1,4 @@
-FROM golang:latest as builder
+FROM golang:1.9.3 as builder
 RUN mkdir -p /go/src/github.com/cloudposse/github-commit-status
 WORKDIR /go/src/github.com/cloudposse/github-commit-status
 COPY . .
