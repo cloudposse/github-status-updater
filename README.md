@@ -185,7 +185,9 @@ See [LICENSE](LICENSE) for full details.
 
 ## About
 
-`github-commit-status` is maintained and funded by [Cloud Posse, LLC][website]. Like it? Please let us know at <hello@cloudposse.com>
+`github-commit-status` is maintained and funded by [Cloud Posse, LLC][website].
+
+Like it? Please let us know at <hello@cloudposse.com>
 
 We love [Open Source Software](https://github.com/cloudposse/)!
 
