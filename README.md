@@ -67,7 +67,7 @@ docker run --rm github-commit-status -e "GITHUB_TOKEN=XXXXXXXXXXXXXXXX" \
 
 
 
-### Run in a Docker container with ENV vars propagated into the container's environment
+### Run in a Docker container with local ENV vars propagated into the container's environment
 
 
 ```sh
