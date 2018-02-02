@@ -1,4 +1,5 @@
-# github-commit-status
+# github-commit-status [![Build Status](https://travis-ci.org/cloudposse/github-commit-status.svg)](https://travis-ci.org/cloudposse/github-commit-status)
+
 
 Command line utility for setting or updating GitHub commit status.
 
