@@ -20,15 +20,25 @@ func (rt myRoundTripper) RoundTrip(r *http.Request) (*http.Response, error) {
 	return http.DefaultTransport.RoundTrip(r)
 }
 
+func isValidState(state string) bool {
+	validStates := [4]string{"error", "failure", "pending", "success"}
+	for _, s := range validStates {
+		if state == s {
+			return true
+		}
+	}
+	return false
+}
+
 var (
-	token = flag.String("token", os.Getenv("GITHUB_TOKEN"), "Github auth token")
-	owner = flag.String("owner", os.Getenv("GITHUB_OWNER"), "Github repository owner")
-	repo  = flag.String("repo", os.Getenv("GITHUB_REPO"), "Github repository name")
-	sha   = flag.String("sha", os.Getenv("GITHUB_COMMIT_SHA"), "Github commit status SHA")
-	state = flag.String("state", os.Getenv("GITHUB_COMMIT_STATE"), "Github state of commit")
-	ctx   = flag.String("ctx", os.Getenv("GITHUB_COMMIT_CONTEXT"), "Github commit status context")
-	desc  = flag.String("desc", os.Getenv("GITHUB_COMMIT_DESCRIPTION"), "Github commit status description")
-	url   = flag.String("url", os.Getenv("GITHUB_COMMIT_TARGET_URL"), "Github commit status target URL")
+	token       = flag.String("token", os.Getenv("GITHUB_TOKEN"), "Github auth token")
+	owner       = flag.String("owner", os.Getenv("GITHUB_OWNER"), "Github repository owner")
+	repo        = flag.String("repo", os.Getenv("GITHUB_REPO"), "Github repository name")
+	sha         = flag.String("sha", os.Getenv("GITHUB_COMMIT_SHA"), "Github commit SHA")
+	state       = flag.String("state", os.Getenv("GITHUB_COMMIT_STATE"), "Github current state of the repository (pending, success, error, or failure)")
+	ctx         = flag.String("context", os.Getenv("GITHUB_COMMIT_CONTEXT"), "Github commit status context")
+	description = flag.String("description", os.Getenv("GITHUB_COMMIT_DESCRIPTION"), "Github commit status description")
+	url         = flag.String("url", os.Getenv("GITHUB_COMMIT_TARGET_URL"), "Github commit status target URL")
 )
 
 func main() {
@@ -54,26 +64,30 @@ func main() {
 		flag.PrintDefaults()
 		log.Fatal("-state required")
 	}
+	if !isValidState(*state) {
+		flag.PrintDefaults()
+		log.Fatal("-state must be one of 'error', 'failure', 'pending', 'success'")
+	}
 
-	http.DefaultClient.Transport = myRoundTripper{*token}
-	client := github.NewClient(http.DefaultClient)
-	st := &github.RepoStatus{}
-	st.State = state
+	repoStatus := &github.RepoStatus{}
+	repoStatus.State = state
 
 	if *ctx != "" {
-		st.Context = ctx
+		repoStatus.Context = ctx
 	}
-	if *desc != "" {
-		st.Description = desc
+	if *description != "" {
+		repoStatus.Description = description
 	}
 	if *url != "" {
-		st.TargetURL = url
+		repoStatus.TargetURL = url
 	}
 
-	st, _, err := client.Repositories.CreateStatus(context.Background(), *owner, *repo, *sha, st)
+	http.DefaultClient.Transport = myRoundTripper{*token}
+	githubClient := github.NewClient(http.DefaultClient)
+	repoStatus, _, err := githubClient.Repositories.CreateStatus(context.Background(), *owner, *repo, *sha, repoStatus)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Created status", *st.ID)
+	fmt.Println("Created status", *repoStatus.ID)
 }

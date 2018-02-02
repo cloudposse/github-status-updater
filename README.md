@@ -1,59 +1,102 @@
 # github-commit-status
 
-CLI to update the status of a GitHub commit
+Command line utility for setting GitHub commit status.
+Useful for CI environments like Travis, Circle or CodeFresh to set more specific commit statuses on pull requests.
+It accepts parameters as command-line arguments or as ENV variables.
 
-
-This is a simple utility to update the status of a commit on github. The
-primary use case is to update the status of a commit in a build environment.
-
-
-## Install
-
-Download the latest binary or
-`brew tap thbishop/github-commit-status && brew install github-commit-status`
-if you're on OSX.
+__NOTE__: Create a [GitHub token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) with `repo:status` scope
 
 
 ## Usage
 
-Create a [github token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/)
-with `repo:status` scope and export it as an env var:
+
+### Run locally with ENV vars
+
 ```sh
-export GITHUB_TOKEN=1234
+go get
+
+CGO_ENABLED=0 go build -v -o "./github-commit-status" *.go
+
+export GITHUB_TOKEN=XXXXXXXXXXXXXXXX
+export GITHUB_OWNER=cloudposse
+export GITHUB_REPO=github-commit-status
+export GITHUB_COMMIT_SHA=XXXXXXXXXXXXXXXX
+export GITHUB_COMMIT_STATE=success
+export GITHUB_COMMIT_CONTEXT=CI
+export GITHUB_COMMIT_DESCRIPTION="Commit status with target URL"
+export GITHUB_COMMIT_TARGET_URL=https://ci.example.com/build/1
+
+github-commit-status
 ```
 
-Update the status with:
+
+
+### Run locally with command-line parameters
+
 ```sh
-github-commit-status --user foo --repo bar --commit $SHA --state success
+go get
+
+CGO_ENABLED=0 go build -v -o "./github-commit-status" *.go
+
+github-commit-status -token XXXXXXXXXXXXXXXX \
+                     -owner cloudposse \
+                     -repo github-commit-status \
+                     -sha XXXXXXXXXXXXXXX \
+                     -state success \
+                     -context CI \
+                     -description "Commit status with target URL" \
+                     -url https://ci.example.com/build/1
 ```
 
-You can also optionally include a target url, description, or context to be
-included in the status update:
+
+
+### Run in a Docker container with ENV vars
+__NOTE__: it will download all `Go` dependencies and build the program inside the container
+
+
 ```sh
-github-commit-status --user foo \
-                     --repo bar \
-                     --commit $SHA \
-                     --state success --target-url https://ci.example.com/build/1 \
-                     --description "It failed because it is busted" \
-                     --context ci
+docker run --rm github-commit-status -e "GITHUB_TOKEN=XXXXXXXXXXXXXXXX" \
+                                     -e "GITHUB_OWNER=cloudposse" \
+                                     -e "GITHUB_REPO=github-commit-status" \
+                                     -e "GITHUB_COMMIT_SHA=XXXXXXXXXXXXXXXX" \
+                                     -e "GITHUB_COMMIT_STATE=success" \
+                                     -e "GITHUB_COMMIT_CONTEXT=CI" \
+                                     -e "GITHUB_COMMIT_DESCRIPTION=Commit status with target URL" \
+                                     -e "GITHUB_COMMIT_TARGET_URL=https://ci.example.com/build/1"
 ```
 
-If you're using github enterprise, you can set the API endpoint with an env
-var like so:
+
+
+### Run in a Docker container with ENV vars propagated into the container's environment
+
+
 ```sh
-export GITHUB_API=https://github.example.com/api/v3
+export GITHUB_TOKEN=XXXXXXXXXXXXXXXX
+export GITHUB_OWNER=cloudposse
+export GITHUB_REPO=github-commit-status
+export GITHUB_COMMIT_SHA=XXXXXXXXXXXXXXXX
+export GITHUB_COMMIT_STATE=success
+export GITHUB_COMMIT_CONTEXT=CI
+export GITHUB_COMMIT_DESCRIPTION="Commit status with target URL"
+export GITHUB_COMMIT_TARGET_URL=https://ci.example.com/build/1
+
+docker run --rm github-commit-status -e GITHUB_TOKEN \
+                                     -e GITHUB_OWNER \
+                                     -e GITHUB_REPO \
+                                     -e GITHUB_COMMIT_SHA \
+                                     -e GITHUB_COMMIT_STATE \
+                                     -e GITHUB_COMMIT_CONTEXT \
+                                     -e GITHUB_COMMIT_DESCRIPTION \
+                                     -e GITHUB_COMMIT_TARGET_URL
 ```
 
-If needed, a proxy can be configured using environment variables:
-* `http_proxy`
-* `HTTP_PROXY`
 
 
-## Contribute
-* Fork the project
-* Make your feature addition or bug fix (with tests and docs) in a topic branch
-* Make sure tests pass
-* Send a pull request and I'll get it integrated
+## References
+* https://github.com/google/go-github/
+* https://docs.docker.com/engine/reference/commandline/run/
+* https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+
 
 
 ## LICENSE
