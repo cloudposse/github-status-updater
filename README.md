@@ -2,6 +2,9 @@
 
 Command line utility for setting or updating GitHub commit status.
 
+![GitHub Commit Status Update](images/GitHub_Commit_Status_Update.png)
+
+
 Useful for CI environments like Travis, Circle or CodeFresh to set more specific commit statuses, including setting the target URL (the URL of the page representing the status).
 
 It accepts parameters as command-line arguments or as ENV variables.
