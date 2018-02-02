@@ -46,27 +46,27 @@ func main() {
 
 	if *token == "" {
 		flag.PrintDefaults()
-		log.Fatal("-token required")
+		log.Fatal("-token or GITHUB_TOKEN required")
 	}
 	if *owner == "" {
 		flag.PrintDefaults()
-		log.Fatal("-owner required")
+		log.Fatal("-owner or GITHUB_OWNER required")
 	}
 	if *repo == "" {
 		flag.PrintDefaults()
-		log.Fatal("-repo required")
+		log.Fatal("-repo or GITHUB_REPO required")
 	}
 	if *sha == "" {
 		flag.PrintDefaults()
-		log.Fatal("-sha required")
+		log.Fatal("-sha or GITHUB_COMMIT_SHA required")
 	}
 	if *state == "" {
 		flag.PrintDefaults()
-		log.Fatal("-state required")
+		log.Fatal("-state or GITHUB_COMMIT_STATE required")
 	}
 	if !isValidState(*state) {
 		flag.PrintDefaults()
-		log.Fatal("-state must be one of 'error', 'failure', 'pending', 'success'")
+		log.Fatal("-state or GITHUB_COMMIT_STATE must be one of 'error', 'failure', 'pending', 'success'")
 	}
 
 	repoStatus := &github.RepoStatus{}
@@ -89,5 +89,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Created status", *repoStatus.ID)
+	fmt.Println("Updated status", *repoStatus.ID)
 }
