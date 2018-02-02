@@ -24,7 +24,7 @@ __NOTE__: `-state` or `GITHUB_COMMIT_STATE` must be one of `error`, `failure`, `
 ```sh
 go get
 
-CGO_ENABLED=0 go build -v -o "./github-commit-status" *.go
+CGO_ENABLED=0 go build -v -o "./dist/bin/github-commit-status" *.go
 
 export GITHUB_TOKEN=XXXXXXXXXXXXXXXX
 export GITHUB_OWNER=cloudposse
@@ -35,7 +35,7 @@ export GITHUB_COMMIT_CONTEXT=CI
 export GITHUB_COMMIT_DESCRIPTION="Commit status with target URL"
 export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
 
-./github-commit-status
+./dist/bin/github-commit-status
 ```
 
 
@@ -46,9 +46,9 @@ export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
 ```sh
 go get
 
-CGO_ENABLED=0 go build -v -o "./github-commit-status" *.go
+CGO_ENABLED=0 go build -v -o "./dist/bin/github-commit-status" *.go
 
-./github-commit-status \
+./dist/bin/github-commit-status \
             -token XXXXXXXXXXXXXXXX \
             -owner cloudposse \
             -repo github-commit-status \
