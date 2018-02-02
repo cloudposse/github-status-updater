@@ -12,6 +12,7 @@ __NOTE__: Create a [GitHub token](https://help.github.com/articles/creating-an-a
 
 ### Run locally with ENV vars
 
+
 ```sh
 go get
 
@@ -24,34 +25,35 @@ export GITHUB_COMMIT_SHA=XXXXXXXXXXXXXXXX
 export GITHUB_COMMIT_STATE=success
 export GITHUB_COMMIT_CONTEXT=CI
 export GITHUB_COMMIT_DESCRIPTION="Commit status with target URL"
-export GITHUB_COMMIT_TARGET_URL=https://ci.example.com/build/1
+export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
 
-github-commit-status
+./github-commit-status
 ```
 
 
 
 ### Run locally with command-line parameters
 
+
 ```sh
 go get
 
 CGO_ENABLED=0 go build -v -o "./github-commit-status" *.go
 
-github-commit-status -token XXXXXXXXXXXXXXXX \
-                     -owner cloudposse \
-                     -repo github-commit-status \
-                     -sha XXXXXXXXXXXXXXX \
-                     -state success \
-                     -context CI \
-                     -description "Commit status with target URL" \
-                     -url https://ci.example.com/build/1
+./github-commit-status -token XXXXXXXXXXXXXXXX \
+                       -owner cloudposse \
+                       -repo github-commit-status \
+                       -sha XXXXXXXXXXXXXXX \
+                       -state success \
+                       -context CI \
+                       -description "Commit status with target URL" \
+                       -url https://my.buildstatus.com/build/3
 ```
 
 
 
 ### Run in a Docker container with ENV vars
-__NOTE__: it will download all `Go` dependencies and build the program inside the container
+__NOTE__: it will download all `Go` dependencies and then build and run the program inside the container
 
 
 ```sh
@@ -62,7 +64,7 @@ docker run --rm github-commit-status -e "GITHUB_TOKEN=XXXXXXXXXXXXXXXX" \
                                      -e "GITHUB_COMMIT_STATE=success" \
                                      -e "GITHUB_COMMIT_CONTEXT=CI" \
                                      -e "GITHUB_COMMIT_DESCRIPTION=Commit status with target URL" \
-                                     -e "GITHUB_COMMIT_TARGET_URL=https://ci.example.com/build/1"
+                                     -e "GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3"
 ```
 
 
@@ -78,7 +80,7 @@ export GITHUB_COMMIT_SHA=XXXXXXXXXXXXXXXX
 export GITHUB_COMMIT_STATE=success
 export GITHUB_COMMIT_CONTEXT=CI
 export GITHUB_COMMIT_DESCRIPTION="Commit status with target URL"
-export GITHUB_COMMIT_TARGET_URL=https://ci.example.com/build/1
+export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
 
 docker run --rm github-commit-status -e GITHUB_TOKEN \
                                      -e GITHUB_OWNER \
@@ -89,6 +91,16 @@ docker run --rm github-commit-status -e GITHUB_TOKEN \
                                      -e GITHUB_COMMIT_DESCRIPTION \
                                      -e GITHUB_COMMIT_TARGET_URL
 ```
+
+
+
+### Run in a Docker container with ENV vars declared in a file
+
+
+```sh
+docker run --rm github-commit-status --env-file ./env.list
+```
+
 
 
 
