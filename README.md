@@ -18,14 +18,18 @@ __NOTE__: `-state` or `GITHUB_COMMIT_STATE` must be one of `error`, `failure`, `
 ## Usage
 
 
-### Run locally with ENV vars
-
+### Build Go program locally
 
 ```sh
 go get
 
 CGO_ENABLED=0 go build -v -o "./dist/bin/github-commit-status" *.go
+```
 
+
+### Run locally with ENV vars
+
+```sh
 export GITHUB_TOKEN=XXXXXXXXXXXXXXXX
 export GITHUB_OWNER=cloudposse
 export GITHUB_REPO=github-commit-status
@@ -42,12 +46,7 @@ export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
 
 ### Run locally with command-line arguments
 
-
 ```sh
-go get
-
-CGO_ENABLED=0 go build -v -o "./dist/bin/github-commit-status" *.go
-
 ./dist/bin/github-commit-status \
             -token XXXXXXXXXXXXXXXX \
             -owner cloudposse \
@@ -61,13 +60,19 @@ CGO_ENABLED=0 go build -v -o "./dist/bin/github-commit-status" *.go
 
 
 
-### Run in a Docker container with ENV vars
+### Build Docker container
 __NOTE__: it will download all `Go` dependencies and then build and run the program inside the container (see [`Dockerfile`](Dockerfile))
 
 
 ```sh
 docker build --tag github-commit-status  --no-cache=true .
+```
 
+
+
+### Run in Docker container with ENV vars
+
+```sh
 docker run -it --rm \
             -e GITHUB_TOKEN=XXXXXXXXXXXXXXXX \
             -e GITHUB_OWNER=cloudposse \
@@ -82,8 +87,7 @@ docker run -it --rm \
 
 
 
-### Run in a Docker container with local ENV vars propagated into the container's environment
-
+### Run in Docker container with local ENV vars propagated into the container's environment
 
 ```sh
 export GITHUB_TOKEN=XXXXXXXXXXXXXXXX
@@ -94,8 +98,6 @@ export GITHUB_COMMIT_STATE=success
 export GITHUB_COMMIT_CONTEXT=CI
 export GITHUB_COMMIT_DESCRIPTION="Commit status with target URL"
 export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
-
-docker build --tag github-commit-status  --no-cache=true .
 
 docker run -it --rm \
             -e GITHUB_TOKEN \
@@ -111,12 +113,9 @@ docker run -it --rm \
 
 
 
-### Run in a Docker container with ENV vars declared in a file
-
+### Run in Docker container with ENV vars declared in a file
 
 ```sh
-docker build --tag github-commit-status  --no-cache=true .
-
 docker run -it --rm --env-file ./env.list github-commit-status
 ```
 
