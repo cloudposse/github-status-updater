@@ -65,7 +65,7 @@ export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
 
 
 ### Build Docker container
-__NOTE__: it will download all `Go` dependencies and then build and run the program inside the container (see [`Dockerfile`](Dockerfile))
+__NOTE__: it will download all `Go` dependencies and then build the program inside the container (see [`Dockerfile`](Dockerfile))
 
 
 ```sh
