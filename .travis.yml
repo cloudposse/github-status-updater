@@ -10,9 +10,12 @@ addons:
 
 install:
 - make init
+- make go:deps-build
+- make go:deps-dev
 - make go-get
 
 script:
+- make go:deps
 - make go:test
 - make go:lint
 - make go:build-all
