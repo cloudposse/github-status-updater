@@ -2,6 +2,7 @@
 *.iml
 dist/bin/*
 github-commit-status
+.build-harness
 
 # Binaries for programs and plugins
 *.exe
