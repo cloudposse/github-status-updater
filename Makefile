@@ -5,35 +5,35 @@ PATH:=$(PATH):$(GOPATH)/bin
 include $(shell curl --silent -o .build-harness "https://raw.githubusercontent.com/cloudposse/build-harness/master/templates/Makefile.build-harness"; echo .build-harness)
 
 
-.PHONY : go_get
-go_get:
+.PHONY : go-get
+go-get:
 	go get
 
 
-.PHONY : go_build
-go_build: go_get
-	CGO_ENABLED=0 go build -v -o "./dist/bin/github-commit-status" *.go
+.PHONY : go-build
+go-build: go-get
+	CGO-ENABLED=0 go build -v -o "./dist/bin/github-commit-status" *.go
 
 
-.PHONY : export_env
-export_env:
-	export GITHUB_TOKEN=XXXXXXXXXXXXXXXX
-	export GITHUB_OWNER=cloudposse
-	export GITHUB_REPO=github-commit-status
-	export GITHUB_COMMIT_SHA=XXXXXXXXXXXXXXXX
-	export GITHUB_COMMIT_STATE=success
-	export GITHUB_COMMIT_CONTEXT=CI
-	export GITHUB_COMMIT_DESCRIPTION="Commit status with target URL"
-	export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
+.PHONY : export-env
+export-env:
+	export GITHUB-TOKEN=XXXXXXXXXXXXXXXX
+	export GITHUB-OWNER=cloudposse
+	export GITHUB-REPO=github-commit-status
+	export GITHUB-COMMIT-SHA=XXXXXXXXXXXXXXXX
+	export GITHUB-COMMIT-STATE=success
+	export GITHUB-COMMIT-CONTEXT=CI
+	export GITHUB-COMMIT-DESCRIPTION="Commit status with target URL"
+	export GITHUB-COMMIT-TARGET-URL=https://my.buildstatus.com/build/3
 
 
-.PHONY : run_locally_with_env_vars
-run_locally_with_env_vars: go_build export_env
+.PHONY : run-locally-with-env-vars
+run-locally-with-env-vars: go-build export-env
 	./dist/bin/github-commit-status
 
 
-.PHONY : run_locally_with_command_line_args
-run_locally_with_command_line_args: go_build
+.PHONY : run-locally-with-command-line-args
+run-locally-with-command-line-args: go-build
 	./dist/bin/github-commit-status \
             -token XXXXXXXXXXXXXXXX \
             -owner cloudposse \
@@ -45,39 +45,39 @@ run_locally_with_command_line_args: go_build
             -url https://my.buildstatus.com/build/3
 
 
-.PHONY : docker_build
-docker_build:
+.PHONY : docker-build
+docker-build:
 	docker build --tag github-commit-status  --no-cache=true .
 
 
-.PHONY : run_docker_with_env_vars
-run_docker_with_env_vars: docker_build
+.PHONY : run-docker-with-env-vars
+run-docker-with-env-vars: docker-build
 	docker run -it --rm \
-            -e GITHUB_TOKEN=XXXXXXXXXXXXXXXX \
-            -e GITHUB_OWNER=cloudposse \
-            -e GITHUB_REPO=github-commit-status \
-            -e GITHUB_COMMIT_SHA=XXXXXXXXXXXXXXXX \
-            -e GITHUB_COMMIT_STATE=success \
-            -e GITHUB_COMMIT_CONTEXT=CI \
-            -e GITHUB_COMMIT_DESCRIPTION="Commit status with target URL" \
-            -e GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3 \
+            -e GITHUB-TOKEN=XXXXXXXXXXXXXXXX \
+            -e GITHUB-OWNER=cloudposse \
+            -e GITHUB-REPO=github-commit-status \
+            -e GITHUB-COMMIT-SHA=XXXXXXXXXXXXXXXX \
+            -e GITHUB-COMMIT-STATE=success \
+            -e GITHUB-COMMIT-CONTEXT=CI \
+            -e GITHUB-COMMIT-DESCRIPTION="Commit status with target URL" \
+            -e GITHUB-COMMIT-TARGET-URL=https://my.buildstatus.com/build/3 \
             github-commit-status
 
 
-.PHONY : run_docker_with_local_env_vars
-run_docker_with_local_env_vars: docker_build export_env
+.PHONY : run-docker-with-local-env-vars
+run-docker-with-local-env-vars: docker-build export-env
 	docker run -it --rm \
-            -e GITHUB_TOKEN \
-            -e GITHUB_OWNER \
-            -e GITHUB_REPO \
-            -e GITHUB_COMMIT_SHA \
-            -e GITHUB_COMMIT_STATE \
-            -e GITHUB_COMMIT_CONTEXT \
-            -e GITHUB_COMMIT_DESCRIPTION \
-            -e GITHUB_COMMIT_TARGET_URL \
+            -e GITHUB-TOKEN \
+            -e GITHUB-OWNER \
+            -e GITHUB-REPO \
+            -e GITHUB-COMMIT-SHA \
+            -e GITHUB-COMMIT-STATE \
+            -e GITHUB-COMMIT-CONTEXT \
+            -e GITHUB-COMMIT-DESCRIPTION \
+            -e GITHUB-COMMIT-TARGET-URL \
             github-commit-status
 
 
-.PHONY : run_docker_with_env_vars_file
-run_docker_with_env_vars_file: docker_build
+.PHONY : run-docker-with-env-vars-file
+run-docker-with-env-vars-file: docker-build
 	docker run -it --rm --env-file ./env.list github-commit-status
