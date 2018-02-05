@@ -32,6 +32,7 @@ CGO_ENABLED=0 go build -v -o "./dist/bin/github-commit-status" *.go
 
 
 ### Run locally with ENV vars
+[run_locally_with_env_vars.sh](examples/run_locally_with_env_vars.sh)
 
 ```sh
 export GITHUB_TOKEN=XXXXXXXXXXXXXXXX
@@ -49,6 +50,7 @@ export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
 
 
 ### Run locally with command-line arguments
+[run_locally_with_command_line_args.sh](examples/run_locally_with_command_line_args.sh)
 
 ```sh
 ./dist/bin/github-commit-status \
@@ -75,9 +77,10 @@ docker build --tag github-commit-status  --no-cache=true .
 
 
 ### Run in Docker container with ENV vars
+[run_docker_with_env_vars.sh](examples/run_docker_with_env_vars.sh)
 
 ```sh
-docker run -it --rm \
+docker run -i --rm \
             -e GITHUB_TOKEN=XXXXXXXXXXXXXXXX \
             -e GITHUB_OWNER=cloudposse \
             -e GITHUB_REPO=github-commit-status \
@@ -92,6 +95,7 @@ docker run -it --rm \
 
 
 ### Run in Docker container with local ENV vars propagated into the container's environment
+[run_docker_with_local_env_vars.sh](examples/run_docker_with_local_env_vars.sh)
 
 ```sh
 export GITHUB_TOKEN=XXXXXXXXXXXXXXXX
@@ -103,7 +107,7 @@ export GITHUB_COMMIT_CONTEXT=CI
 export GITHUB_COMMIT_DESCRIPTION="Commit status with target URL"
 export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
 
-docker run -it --rm \
+docker run -i --rm \
             -e GITHUB_TOKEN \
             -e GITHUB_OWNER \
             -e GITHUB_REPO \
@@ -118,9 +122,10 @@ docker run -it --rm \
 
 
 ### Run in Docker container with ENV vars declared in a file
+[run_docker_with_env_vars_file.sh](examples/run_docker_with_env_vars_file.sh)
 
 ```sh
-docker run -it --rm --env-file ./env.list github-commit-status
+docker run -i --rm --env-file ./examples/example.env github-commit-status
 ```
 
 

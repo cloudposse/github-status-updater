@@ -9,4 +9,4 @@ export GITHUB_COMMIT_CONTEXT=CI
 export GITHUB_COMMIT_DESCRIPTION="Commit status with target URL"
 export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
 
-./dist/bin/github-commit-status
+../dist/bin/github-commit-status

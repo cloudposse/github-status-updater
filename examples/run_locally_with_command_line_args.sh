@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./dist/bin/github-commit-status \
+../dist/bin/github-commit-status \
         -token XXXXXXXXXXXXXXXX \
         -owner cloudposse \
         -repo github-commit-status \
