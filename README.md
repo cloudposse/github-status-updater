@@ -1,9 +1,12 @@
 # github-status-updater [![Build Status](https://travis-ci.org/cloudposse/github-status-updater.svg)](https://travis-ci.org/cloudposse/github-status-updater)
 
 
-Command line utility for updating GitHub commit statuses and enabling status checks for pull requests.
+Command line utility for updating GitHub commit statuses and enabling required status checks for pull requests.
 
-###
+* https://developer.github.com/v3/repos/statuses
+* https://help.github.com/articles/enabling-required-status-checks
+
+
 ![GitHub Status Checks](images/github-status-check-success.png)
 ###
 
