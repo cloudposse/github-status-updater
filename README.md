@@ -138,18 +138,18 @@ docker run -i --rm --env-file ./example.env github-status-updater
 ```
 
 
+##
+## GitHub Required Status Checks
 
-## GitHub Status Checks Usage
 
+The module can be used to enable and update required status checks in Pull Requests.
 
-The module can be used to update GitHub status checks in Pull Requests.
-
-https://help.github.com/articles/enabling-required-status-checks
+* https://help.github.com/articles/enabling-required-status-checks
 
 This is useful for CI environments to set build statuses with URLs to the build pages.
 
 
-To enable status checks for branch `test` of the `github-status-updater` repo and CI environment `my-ci`, execute the `update_branch_protection` action locally
+To enable status checks for branch `test` of the `github-status-updater` repo, execute the `update_branch_protection` action locally
 
 ```ssh
 ./dist/bin/github-status-updater \
