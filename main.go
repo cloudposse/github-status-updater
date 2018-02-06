@@ -116,7 +116,7 @@ func main() {
 		}
 
 		contexts := []string{*ctx}
-		requiredStatusChecks := &github.RequiredStatusChecks{Strict: false, Contexts: contexts}
+		requiredStatusChecks := &github.RequiredStatusChecks{Strict: true, Contexts: contexts}
 		protectionRequest := &github.ProtectionRequest{RequiredStatusChecks: requiredStatusChecks}
 
 		_, _, err := githubClient.Repositories.UpdateBranchProtection(context.Background(), *owner, *repo, *ref, protectionRequest)
