@@ -3,10 +3,11 @@
 
 Command line utility for setting or updating GitHub commit status.
 
-![GitHub Commit Status Update](images/GitHub_Commit_Status_Update.png)
+![GitHub Commit Status](images/GitHub_Commit_Status.png)
 
 
-Useful for CI environments like Travis, Circle or CodeFresh to set more specific commit statuses, including setting the target URL (the URL of the page representing the status).
+Useful for CI environments like Travis, Circle or CodeFresh to set more specific statuses for commits, branches and tags,
+including setting the target URL (the URL of the page representing the status).
 
 It accepts parameters as command-line arguments or as ENV variables.
 
@@ -15,7 +16,7 @@ It accepts parameters as command-line arguments or as ENV variables.
 __NOTE__: Create a [GitHub token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) with `repo:status` scope
 
 
-__NOTE__: `-state` or `GITHUB_COMMIT_STATE` must be one of `error`, `failure`, `pending`, `success`
+__NOTE__: `-state` or `GITHUB_STATE` must be one of `error`, `failure`, `pending`, `success`
 
 
 
@@ -38,11 +39,11 @@ CGO_ENABLED=0 go build -v -o "./dist/bin/github-commit-status" *.go
 export GITHUB_TOKEN=XXXXXXXXXXXXXXXX
 export GITHUB_OWNER=cloudposse
 export GITHUB_REPO=github-commit-status
-export GITHUB_COMMIT_SHA=XXXXXXXXXXXXXXXX
-export GITHUB_COMMIT_STATE=success
-export GITHUB_COMMIT_CONTEXT=CI
-export GITHUB_COMMIT_DESCRIPTION="Commit status with target URL"
-export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
+export GITHUB_REF=XXXXXXXXXXXXXXXX
+export GITHUB_STATE=success
+export GITHUB_CONTEXT=CI
+export GITHUB_DESCRIPTION="Commit status with target URL"
+export GITHUB_TARGET_URL=https://my.buildstatus.com/build/3
 
 ./dist/bin/github-commit-status
 ```
@@ -57,7 +58,7 @@ export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
             -token XXXXXXXXXXXXXXXX \
             -owner cloudposse \
             -repo github-commit-status \
-            -sha XXXXXXXXXXXXXXX \
+            -ref XXXXXXXXXXXXXXX \
             -state success \
             -context CI \
             -description "Commit status with target URL" \
@@ -84,11 +85,11 @@ docker run -i --rm \
             -e GITHUB_TOKEN=XXXXXXXXXXXXXXXX \
             -e GITHUB_OWNER=cloudposse \
             -e GITHUB_REPO=github-commit-status \
-            -e GITHUB_COMMIT_SHA=XXXXXXXXXXXXXXXX \
-            -e GITHUB_COMMIT_STATE=success \
-            -e GITHUB_COMMIT_CONTEXT=CI \
-            -e GITHUB_COMMIT_DESCRIPTION="Commit status with target URL" \
-            -e GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3 \
+            -e GITHUB_REF=XXXXXXXXXXXXXXXX \
+            -e GITHUB_STATE=success \
+            -e GITHUB_CONTEXT=CI \
+            -e GITHUB_DESCRIPTION="Commit status with target URL" \
+            -e GITHUB_TARGET_URL=https://my.buildstatus.com/build/3 \
             github-commit-status
 ```
 
@@ -101,21 +102,21 @@ docker run -i --rm \
 export GITHUB_TOKEN=XXXXXXXXXXXXXXXX
 export GITHUB_OWNER=cloudposse
 export GITHUB_REPO=github-commit-status
-export GITHUB_COMMIT_SHA=XXXXXXXXXXXXXXXX
-export GITHUB_COMMIT_STATE=success
-export GITHUB_COMMIT_CONTEXT=CI
-export GITHUB_COMMIT_DESCRIPTION="Commit status with target URL"
-export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
+export GITHUB_REF=XXXXXXXXXXXXXXXX
+export GITHUB_STATE=success
+export GITHUB_CONTEXT=CI
+export GITHUB_DESCRIPTION="Commit status with target URL"
+export GITHUB_TARGET_URL=https://my.buildstatus.com/build/3
 
 docker run -i --rm \
             -e GITHUB_TOKEN \
             -e GITHUB_OWNER \
             -e GITHUB_REPO \
-            -e GITHUB_COMMIT_SHA \
-            -e GITHUB_COMMIT_STATE \
-            -e GITHUB_COMMIT_CONTEXT \
-            -e GITHUB_COMMIT_DESCRIPTION \
-            -e GITHUB_COMMIT_TARGET_URL \
+            -e GITHUB_REF \
+            -e GITHUB_STATE \
+            -e GITHUB_CONTEXT \
+            -e GITHUB_DESCRIPTION \
+            -e GITHUB_TARGET_URL \
             github-commit-status
 ```
 

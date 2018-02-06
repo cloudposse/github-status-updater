@@ -4,7 +4,7 @@
         -token XXXXXXXXXXXXXXXX \
         -owner cloudposse \
         -repo github-commit-status \
-        -sha XXXXXXXXXXXXXXX \
+        -ref XXXXXXXXXXXXXXX \
         -state success \
         -context CI \
         -description "Commit status with target URL" \

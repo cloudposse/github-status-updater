@@ -34,11 +34,11 @@ var (
 	token       = flag.String("token", os.Getenv("GITHUB_TOKEN"), "Github auth token")
 	owner       = flag.String("owner", os.Getenv("GITHUB_OWNER"), "Github repository owner")
 	repo        = flag.String("repo", os.Getenv("GITHUB_REPO"), "Github repository name")
-	sha         = flag.String("sha", os.Getenv("GITHUB_COMMIT_SHA"), "Github commit SHA")
-	state       = flag.String("state", os.Getenv("GITHUB_COMMIT_STATE"), "Github current state of the repository (pending, success, error, or failure)")
-	ctx         = flag.String("context", os.Getenv("GITHUB_COMMIT_CONTEXT"), "Github commit status context")
-	description = flag.String("description", os.Getenv("GITHUB_COMMIT_DESCRIPTION"), "Github commit status description")
-	url         = flag.String("url", os.Getenv("GITHUB_COMMIT_TARGET_URL"), "Github commit status target URL")
+	ref         = flag.String("ref", os.Getenv("GITHUB_REF"), "Ref can be a SHA, a branch name, or a tag name")
+	state       = flag.String("state", os.Getenv("GITHUB_STATE"), "State of the commit, branch or tag. Possible values are pending, success, error, or failure")
+	ctx         = flag.String("context", os.Getenv("GITHUB_CONTEXT"), "Label to differentiate this status from the statuses of other systems")
+	description = flag.String("description", os.Getenv("GITHUB_DESCRIPTION"), "Short high level summary of the status")
+	url         = flag.String("url", os.Getenv("GITHUB_TARGET_URL"), "URL of the page representing the status")
 )
 
 func main() {
@@ -56,17 +56,17 @@ func main() {
 		flag.PrintDefaults()
 		log.Fatal("-repo or GITHUB_REPO required")
 	}
-	if *sha == "" {
+	if *ref == "" {
 		flag.PrintDefaults()
-		log.Fatal("-sha or GITHUB_COMMIT_SHA required")
+		log.Fatal("-ref or GITHUB_REF required")
 	}
 	if *state == "" {
 		flag.PrintDefaults()
-		log.Fatal("-state or GITHUB_COMMIT_STATE required")
+		log.Fatal("-state or GITHUB_STATE required")
 	}
 	if !isValidState(*state) {
 		flag.PrintDefaults()
-		log.Fatal("-state or GITHUB_COMMIT_STATE must be one of 'error', 'failure', 'pending', 'success'")
+		log.Fatal("-state or GITHUB_STATE must be one of 'error', 'failure', 'pending', 'success'")
 	}
 
 	repoStatus := &github.RepoStatus{}
@@ -84,7 +84,7 @@ func main() {
 
 	http.DefaultClient.Transport = myRoundTripper{*token}
 	githubClient := github.NewClient(http.DefaultClient)
-	repoStatus, _, err := githubClient.Repositories.CreateStatus(context.Background(), *owner, *repo, *sha, repoStatus)
+	repoStatus, _, err := githubClient.Repositories.CreateStatus(context.Background(), *owner, *repo, *ref, repoStatus)
 	if err != nil {
 		log.Fatal(err)
 	}
