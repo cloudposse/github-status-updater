@@ -13,17 +13,29 @@ Command line utility for updating GitHub commit statuses and enabling required s
 
 Useful for CI environments to set more specific commit and build statuses, including setting the target URL (the URL of the page representing the status).
 
-__NOTE__: The icons in the image above are the avatars of the users for which the GitHub access tokens are issued
-
 __NOTE__: Create a [GitHub token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) with `repo:status` scope
+
+__NOTE__: The icons in the image above are the avatars of the users for which the GitHub access tokens are issued
 
 
 
 ## Usage
 
-__NOTE__: The module accepts parameters as command-line arguments or as ENV variables.
+__NOTE__: The module accepts parameters as command-line arguments or as ENV variables
 
-__NOTE__: `-state` or `GITHUB_STATE` must be one of `error`, `failure`, `pending`, `success`
+
+| Command-line argument |  ENV var            |  Description                                                                   |
+|:----------------------|:--------------------|:-------------------------------------------------------------------------------|
+| action                | GITHUB_ACTION       | Action to perform: `update_state` or `update_branch_protection`                |
+| token                 | GITHUB_TOKEN        | Github access token                                                            |
+| owner                 | GITHUB_OWNER        | Github repository owner                                                        |
+| repo                  | GITHUB_REPO         | Github repository name                                                         |
+| ref                   | GITHUB_REF          | Commit SHA, branch name or tag                                                 |
+| state                 | GITHUB_STATE        | Commit state. Possible values are `pending`, `success`, `error` or `failure`   |
+| context               | GITHUB_CONTEXT      | Status label (_e.g._ `my-ci`)                                                  |
+| description           | GITHUB_DESCRIPTION  | Short high level summary of the status                                         |
+| url                   | GITHUB_TARGET_URL   | URL of the page representing the status                                        |
+
 
 
 ### build the Go program locally
