@@ -8,7 +8,7 @@ Command line utility for updating GitHub commit statuses and enabling status che
 ###
 
 
-Useful for CI environments like Travis, Circle or CodeFresh to set more specific commit and build statuses,
+Useful for CI environments (like Travis, Circle or CodeFresh) to set more specific commit and build statuses,
 including setting the target URL (the URL of the page representing the status).
 
 It accepts parameters as command-line arguments or as ENV variables.
