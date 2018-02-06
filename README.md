@@ -24,7 +24,6 @@ __NOTE__: `-state` or `GITHUB_STATE` must be one of `error`, `failure`, `pending
 
 ## Usage
 
-
 ### Build the Go program locally
 
 ```sh
