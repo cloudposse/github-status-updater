@@ -152,7 +152,10 @@ This is useful for CI environments to set build statuses with URLs to the build 
 ###
 
 
-For this, execute the `update_branch_protection` action locally (_e.g._ for branch `test` of the `github-status-updater` repo and CI environment `my-ci`)
+__NOTE__: The icons are the avatars of the user for which the GitHub access token is issued
+
+
+To enable status checks for branch `test` of the `github-status-updater` repo and CI environment `my-ci`, execute the `update_branch_protection` action locally
 
 ```ssh
 ./dist/bin/github-status-updater \
@@ -319,6 +322,9 @@ See [LICENSE](LICENSE) for full details.
 ## About
 
 `github-status-updater` is maintained and funded by [Cloud Posse, LLC][website].
+
+![Cloud Posse](https://cloudposse.com/logo-300x69.png)
+
 
 Like it? Please let us know at <hello@cloudposse.com>
 

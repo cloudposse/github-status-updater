@@ -32,7 +32,7 @@ func isValidState(state string) bool {
 
 var (
 	action      = flag.String("action", os.Getenv("GITHUB_ACTION"), "Action to perform: 'update_state' or 'update_branch_protection'")
-	token       = flag.String("token", os.Getenv("GITHUB_TOKEN"), "Github auth token")
+	token       = flag.String("token", os.Getenv("GITHUB_TOKEN"), "Github access token")
 	owner       = flag.String("owner", os.Getenv("GITHUB_OWNER"), "Github repository owner")
 	repo        = flag.String("repo", os.Getenv("GITHUB_REPO"), "Github repository name")
 	ref         = flag.String("ref", os.Getenv("GITHUB_REF"), "Ref can be a SHA, a branch name, or a tag name")
@@ -51,7 +51,7 @@ func main() {
 	}
 	if *action != "update_state" && *action != "update_branch_protection" {
 		flag.PrintDefaults()
-		log.Fatal("-action or GITHUB_ACTION must 'update_state' or 'update_branch_protection'")
+		log.Fatal("-action or GITHUB_ACTION must be 'update_state' or 'update_branch_protection'")
 	}
 	if *token == "" {
 		flag.PrintDefaults()
@@ -73,7 +73,7 @@ func main() {
 	if *action == "update_state" {
 		if *ref == "" {
 			flag.PrintDefaults()
-			log.Fatal("-ref or GITHUB_REF required and must be a commit SHA")
+			log.Fatal("-ref or GITHUB_REF is required and must be a commit SHA")
 		}
 		if *state == "" {
 			flag.PrintDefaults()
@@ -108,7 +108,7 @@ func main() {
 	if *action == "update_branch_protection" {
 		if *ref == "" {
 			flag.PrintDefaults()
-			log.Fatal("-ref or GITHUB_REF required and must be a branch name")
+			log.Fatal("-ref or GITHUB_REF is required and must be a branch name")
 		}
 		if *ctx == "" {
 			flag.PrintDefaults()
