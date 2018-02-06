@@ -144,11 +144,7 @@ The module can be used to update GitHub status checks in Pull Requests.
 
 https://help.github.com/articles/enabling-required-status-checks
 
-This is useful for CI environments to set build statuses with URLs to the build pages, similar to the TravisCI status checks in the image below
-
-###
-![TravisCI Status Checks](images/travis-ci-status-checks.png)
-###
+This is useful for CI environments to set build statuses with URLs to the build pages.
 
 
 To enable status checks for branch `test` of the `github-status-updater` repo and CI environment `my-ci`, execute the `update_branch_protection` action locally
