@@ -1,22 +1,22 @@
 # github-status-updater [![Build Status](https://travis-ci.org/cloudposse/github-status-updater.svg)](https://travis-ci.org/cloudposse/github-status-updater)
 
 
-Command line utility for updating GitHub commit statuses.
+Command line utility for updating GitHub commit statuses and enabling status checks for pull requests .
 
 ###
-![GitHub Commit Status](images/github-commit-status.png)
+![GitHub Status Checks](images/github-status-check-success.png)
 ###
 
 
-Useful for CI environments like Travis, Circle or CodeFresh to set more specific commit statuses,
+Useful for CI environments like Travis, Circle or CodeFresh to set more specific commit and build statuses,
 including setting the target URL (the URL of the page representing the status).
 
 It accepts parameters as command-line arguments or as ENV variables.
 
 
+__NOTE__: The icons in the image above are the avatars of the users for which the GitHub access tokens are issued
 
 __NOTE__: Create a [GitHub token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) with `repo:status` scope
-
 
 __NOTE__: `-state` or `GITHUB_STATE` must be one of `error`, `failure`, `pending`, `success`
 
@@ -152,9 +152,6 @@ This is useful for CI environments to set build statuses with URLs to the build 
 ###
 
 
-__NOTE__: The icons are the avatars of the user for which the GitHub access token is issued
-
-
 To enable status checks for branch `test` of the `github-status-updater` repo and CI environment `my-ci`, execute the `update_branch_protection` action locally
 
 ```ssh
@@ -165,7 +162,6 @@ To enable status checks for branch `test` of the `github-status-updater` repo an
         -repo github-status-updater \
         -ref test \
         -context my-ci
-
 ```
 
 
