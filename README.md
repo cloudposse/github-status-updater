@@ -1,12 +1,13 @@
 # github-status-updater [![Build Status](https://travis-ci.org/cloudposse/github-status-updater.svg)](https://travis-ci.org/cloudposse/github-status-updater)
 
 
-Command line utility for setting or updating GitHub commit status.
+Command line utility for updating GitHub commit status.
 
-![GitHub Commit Status Update](images/GitHub_Commit_Status_Update.png)
+![GitHub Commit Status](images/GitHub_Commit_Status.png)
 
 
-Useful for CI environments like Travis, Circle or CodeFresh to set more specific commit statuses, including setting the target URL (the URL of the page representing the status).
+Useful for CI environments like Travis, Circle or CodeFresh to set more specific commit statuses,
+including setting the target URL (the URL of the page representing the status).
 
 It accepts parameters as command-line arguments or as ENV variables.
 
@@ -15,7 +16,7 @@ It accepts parameters as command-line arguments or as ENV variables.
 __NOTE__: Create a [GitHub token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) with `repo:status` scope
 
 
-__NOTE__: `-state` or `GITHUB_COMMIT_STATE` must be one of `error`, `failure`, `pending`, `success`
+__NOTE__: `-state` or `GITHUB_STATE` must be one of `error`, `failure`, `pending`, `success`
 
 
 
