@@ -134,6 +134,7 @@ docker run -i --rm --env-file ./examples/example.env github-commit-status
 
 ## References
 * https://github.com/google/go-github
+* https://godoc.org/github.com/google/go-github/github
 * https://docs.docker.com/develop/develop-images/dockerfile_best-practices
 * https://docs.docker.com/engine/reference/commandline/build
 * https://docs.docker.com/engine/reference/commandline/run/
