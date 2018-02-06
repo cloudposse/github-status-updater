@@ -1,9 +1,11 @@
 # github-status-updater [![Build Status](https://travis-ci.org/cloudposse/github-status-updater.svg)](https://travis-ci.org/cloudposse/github-status-updater)
 
 
-Command line utility for updating GitHub commit status.
+Command line utility for updating GitHub commit statuses.
 
+###
 ![GitHub Commit Status](images/github-commit-status.png)
+###
 
 
 Useful for CI environments like Travis, Circle or CodeFresh to set more specific commit statuses,
@@ -136,12 +138,131 @@ docker run -i --rm --env-file ./example.env github-status-updater
 
 
 
+## GitHub Status Checks Usage
+
+
+The module can be used to update GitHub status checks in Pull Requests.
+
+https://help.github.com/articles/enabling-required-status-checks
+
+This is useful for CI environments to set build statuses with URLs to the build pages, similar to the TravisCI status checks in the image below
+
+###
+![TravisCI Status Checks](images/travis-ci-status-checks.png)
+###
+
+
+For this, execute the `update_branch_protection` action locally (_e.g._ for branch `test` of the `github-status-updater` repo and CI environment `my-ci`)
+
+```ssh
+./dist/bin/github-status-updater \
+        -action update_branch_protection \
+        -token XXXXXXXXXXXXXXXXXXXXXX \
+        -owner cloudposse \
+        -repo github-status-updater \
+        -ref test \
+        -context my-ci
+
+```
+
+
+or in a Docker container
+
+```ssh
+docker run -i --rm \
+        -e GITHUB_ACTION=update_branch_protection \
+        -e GITHUB_TOKEN=XXXXXXXXXXXXXXXX \
+        -e GITHUB_OWNER=cloudposse \
+        -e GITHUB_REPO=github-status-updater \
+        -e GITHUB_REF=test \
+        -e GITHUB_CONTEXT="my-ci" \
+        github-status-updater
+```
+
+
+After the command executes, status check `my-ci` will be enabled for the branch as shown in the image below
+
+###
+![GitHub Branch Protection Settings](images/github-branch-protection-settings.png)
+###
+
+
+Then create a Pull Request for the branch.
+
+The CI environment `my-ci` gets a notification from GitHub, downloads the branch, starts the build, and updates the build status to `pending`
+with target URL `https://my-ci.com/build/1`
+
+by executing the following command to update the status of the last commit (`ref XXXXXXXXXXXXXXX`)
+
+```sh
+./dist/bin/github-status-updater \
+        -action update_state \
+        -token XXXXXXXXXXXXXXXX \
+        -owner cloudposse \
+        -repo github-status-updater \
+        -ref XXXXXXXXXXXXXXX \
+        -state pending \
+        -context "my-ci" \
+        -description "still building..." \
+        -url "https://my-ci.com/build/1"
+```
+
+###
+![GitHub Status Check Pending](images/github-status-check-pending.png)
+###
+
+
+In case of any build errors, `my-ci` can update the build status to `error` with the error message in the `description` parameter
+
+```sh
+./dist/bin/github-status-updater \
+        -action update_state \
+        -token XXXXXXXXXXXXXXXX \
+        -owner cloudposse \
+        -repo github-status-updater \
+        -ref XXXXXXXXXXXXXXX \
+        -state error \
+        -context "my-ci" \
+        -description "error" \
+        -url "https://my-ci.com/build/1"
+```
+
+
+###
+![GitHub Status Check Error](images/github-status-check-error.png)
+###
+
+
+And finally, when the build succeeds, `my-ci` updates the build status to `success` with the success message in the `description` parameter
+
+```sh
+./dist/bin/github-status-updater \
+        -action update_state \
+        -token XXXXXXXXXXXXXXXX \
+        -owner cloudposse \
+        -repo github-status-updater \
+        -ref XXXXXXXXXXXXXXX \
+        -state success \
+        -context "my-ci" \
+        -description "build completed" \
+        -url "https://my-ci.com/build/1"
+```
+
+###
+![GitHub Status Check Success](images/github-status-check-success.png)
+###
+
+
 
 ## References
 * https://github.com/google/go-github
+* https://godoc.org/github.com/google/go-github/github
+* https://help.github.com/articles/enabling-required-status-checks
+* https://developer.github.com/v3/repos/statuses
+* https://developer.github.com/v3/guides/building-a-ci-server
 * https://docs.docker.com/develop/develop-images/dockerfile_best-practices
 * https://docs.docker.com/engine/reference/commandline/build
-* https://docs.docker.com/engine/reference/commandline/run/
+* https://docs.docker.com/engine/reference/commandline/run
 
 
 
