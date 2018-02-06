@@ -190,9 +190,7 @@ After the command executes, status check `my-ci` will be enabled for the branch 
 Then create a Pull Request for the branch.
 
 The CI environment `my-ci` gets a notification from GitHub, downloads the branch, starts the build, and updates the build status to `pending`
-with target URL `https://my-ci.com/build/1`
-
-by executing the following command to update the status of the last commit (`ref XXXXXXXXXXXXXXX`)
+with target URL `https://my-ci.com/build/1` by executing the following command to update the status of the last commit (`ref XXXXXXXXXXXXXXX`)
 
 ```sh
 ./dist/bin/github-status-updater \
