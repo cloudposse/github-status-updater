@@ -11,11 +11,11 @@ import (
 	"golang.org/x/net/context"
 )
 
-type myRoundTripper struct {
+type roundTripper struct {
 	accessToken string
 }
 
-func (rt myRoundTripper) RoundTrip(r *http.Request) (*http.Response, error) {
+func (rt roundTripper) RoundTrip(r *http.Request) (*http.Response, error) {
 	r.Header.Set("Authorization", fmt.Sprintf("token %s", rt.accessToken))
 	return http.DefaultTransport.RoundTrip(r)
 }
@@ -31,19 +31,28 @@ func isValidState(state string) bool {
 }
 
 var (
-	token       = flag.String("token", os.Getenv("GITHUB_TOKEN"), "Github auth token")
+	action      = flag.String("action", os.Getenv("GITHUB_ACTION"), "Action to perform: 'update_state' or 'update_branch_protection'")
+	token       = flag.String("token", os.Getenv("GITHUB_TOKEN"), "Github access token")
 	owner       = flag.String("owner", os.Getenv("GITHUB_OWNER"), "Github repository owner")
 	repo        = flag.String("repo", os.Getenv("GITHUB_REPO"), "Github repository name")
-	sha         = flag.String("sha", os.Getenv("GITHUB_COMMIT_SHA"), "Github commit SHA")
-	state       = flag.String("state", os.Getenv("GITHUB_COMMIT_STATE"), "Github current state of the repository (pending, success, error, or failure)")
-	ctx         = flag.String("context", os.Getenv("GITHUB_COMMIT_CONTEXT"), "Github commit status context")
-	description = flag.String("description", os.Getenv("GITHUB_COMMIT_DESCRIPTION"), "Github commit status description")
-	url         = flag.String("url", os.Getenv("GITHUB_COMMIT_TARGET_URL"), "Github commit status target URL")
+	ref         = flag.String("ref", os.Getenv("GITHUB_REF"), "Commit SHA, branch name or tag")
+	state       = flag.String("state", os.Getenv("GITHUB_STATE"), "Commit state. Possible values are 'pending', 'success', 'error' or 'failure'")
+	ctx         = flag.String("context", os.Getenv("GITHUB_CONTEXT"), "Status label")
+	description = flag.String("description", os.Getenv("GITHUB_DESCRIPTION"), "Short high level summary of the status")
+	url         = flag.String("url", os.Getenv("GITHUB_TARGET_URL"), "URL of the page representing the status")
 )
 
 func main() {
 	flag.Parse()
 
+	if *action == "" {
+		flag.PrintDefaults()
+		log.Fatal("-action or GITHUB_ACTION required")
+	}
+	if *action != "update_state" && *action != "update_branch_protection" {
+		flag.PrintDefaults()
+		log.Fatal("-action or GITHUB_ACTION must be 'update_state' or 'update_branch_protection'")
+	}
 	if *token == "" {
 		flag.PrintDefaults()
 		log.Fatal("-token or GITHUB_TOKEN required")
@@ -56,38 +65,65 @@ func main() {
 		flag.PrintDefaults()
 		log.Fatal("-repo or GITHUB_REPO required")
 	}
-	if *sha == "" {
-		flag.PrintDefaults()
-		log.Fatal("-sha or GITHUB_COMMIT_SHA required")
-	}
-	if *state == "" {
-		flag.PrintDefaults()
-		log.Fatal("-state or GITHUB_COMMIT_STATE required")
-	}
-	if !isValidState(*state) {
-		flag.PrintDefaults()
-		log.Fatal("-state or GITHUB_COMMIT_STATE must be one of 'error', 'failure', 'pending', 'success'")
-	}
 
-	repoStatus := &github.RepoStatus{}
-	repoStatus.State = state
-
-	if *ctx != "" {
-		repoStatus.Context = ctx
-	}
-	if *description != "" {
-		repoStatus.Description = description
-	}
-	if *url != "" {
-		repoStatus.TargetURL = url
-	}
-
-	http.DefaultClient.Transport = myRoundTripper{*token}
+	http.DefaultClient.Transport = roundTripper{*token}
 	githubClient := github.NewClient(http.DefaultClient)
-	repoStatus, _, err := githubClient.Repositories.CreateStatus(context.Background(), *owner, *repo, *sha, repoStatus)
-	if err != nil {
-		log.Fatal(err)
+
+	// Update status of a branch, tag, or commit
+	if *action == "update_state" {
+		if *ref == "" {
+			flag.PrintDefaults()
+			log.Fatal("-ref or GITHUB_REF is required and must be a commit SHA")
+		}
+		if *state == "" {
+			flag.PrintDefaults()
+			log.Fatal("-state or GITHUB_STATE required")
+		}
+		if !isValidState(*state) {
+			flag.PrintDefaults()
+			log.Fatal("-state or GITHUB_STATE must be one of 'error', 'failure', 'pending', 'success'")
+		}
+
+		repoStatus := &github.RepoStatus{}
+		repoStatus.State = state
+
+		if *ctx != "" {
+			repoStatus.Context = ctx
+		}
+		if *description != "" {
+			repoStatus.Description = description
+		}
+		if *url != "" {
+			repoStatus.TargetURL = url
+		}
+
+		repoStatus, _, err := githubClient.Repositories.CreateStatus(context.Background(), *owner, *repo, *ref, repoStatus)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println("Updated status", *repoStatus.ID)
 	}
 
-	fmt.Println("Updated status", *repoStatus.ID)
+	if *action == "update_branch_protection" {
+		if *ref == "" {
+			flag.PrintDefaults()
+			log.Fatal("-ref or GITHUB_REF is required and must be a branch name")
+		}
+		if *ctx == "" {
+			flag.PrintDefaults()
+			log.Fatal("-ctx or GITHUB_CONTEXT required")
+		}
+
+		contexts := []string{*ctx}
+		requiredStatusChecks := &github.RequiredStatusChecks{Strict: true, Contexts: contexts}
+		protectionRequest := &github.ProtectionRequest{RequiredStatusChecks: requiredStatusChecks}
+
+		_, _, err := githubClient.Repositories.UpdateBranchProtection(context.Background(), *owner, *repo, *ref, protectionRequest)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println("Updated branch protection")
+	}
 }

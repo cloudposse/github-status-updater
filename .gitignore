@@ -1,7 +1,7 @@
 .idea
 *.iml
 dist/bin/*
-github-commit-status
+github-status-updater
 .build-harness
 
 # Binaries for programs and plugins

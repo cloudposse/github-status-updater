@@ -1,11 +1,12 @@
 #!/bin/bash
 
-../dist/bin/github-commit-status \
+../dist/bin/github-status-updater \
+        -action update_state \
         -token XXXXXXXXXXXXXXXX \
         -owner cloudposse \
-        -repo github-commit-status \
-        -sha XXXXXXXXXXXXXXX \
+        -repo github-status-updater \
+        -ref XXXXXXXXXXXXXXX \
         -state success \
-        -context CI \
+        -context "my-ci" \
         -description "Commit status with target URL" \
-        -url https://my.buildstatus.com/build/3
+        -url "https://my-ci.com/build/1"
