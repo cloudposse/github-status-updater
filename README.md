@@ -1,13 +1,12 @@
-# github-commit-status [![Build Status](https://travis-ci.org/cloudposse/github-commit-status.svg)](https://travis-ci.org/cloudposse/github-commit-status)
+# github-status-updater [![Build Status](https://travis-ci.org/cloudposse/github-status-updater.svg)](https://travis-ci.org/cloudposse/github-status-updater)
 
 
-Command line utility for setting or updating GitHub statuses of commits, branches and tags.
+Command line utility for setting or updating GitHub commit status.
 
-![GitHub Commit Status](images/GitHub_Commit_Status.png)
+![GitHub Commit Status Update](images/GitHub_Commit_Status_Update.png)
 
 
-Useful for CI environments like Travis, Circle or CodeFresh to set more specific statuses for commits, branches and tags,
-including setting the target URL (the URL of the page representing the status).
+Useful for CI environments like Travis, Circle or CodeFresh to set more specific commit statuses, including setting the target URL (the URL of the page representing the status).
 
 It accepts parameters as command-line arguments or as ENV variables.
 
@@ -16,7 +15,7 @@ It accepts parameters as command-line arguments or as ENV variables.
 __NOTE__: Create a [GitHub token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) with `repo:status` scope
 
 
-__NOTE__: `-state` or `GITHUB_STATE` must be one of `error`, `failure`, `pending`, `success`
+__NOTE__: `-state` or `GITHUB_COMMIT_STATE` must be one of `error`, `failure`, `pending`, `success`
 
 
 
@@ -28,7 +27,7 @@ __NOTE__: `-state` or `GITHUB_STATE` must be one of `error`, `failure`, `pending
 ```sh
 go get
 
-CGO_ENABLED=0 go build -v -o "./dist/bin/github-commit-status" *.go
+CGO_ENABLED=0 go build -v -o "./dist/bin/github-status-updater" *.go
 ```
 
 
@@ -38,14 +37,14 @@ CGO_ENABLED=0 go build -v -o "./dist/bin/github-commit-status" *.go
 ```sh
 export GITHUB_TOKEN=XXXXXXXXXXXXXXXX
 export GITHUB_OWNER=cloudposse
-export GITHUB_REPO=github-commit-status
-export GITHUB_REF=XXXXXXXXXXXXXXXX
-export GITHUB_STATE=success
-export GITHUB_CONTEXT=CI
-export GITHUB_DESCRIPTION="Commit status with target URL"
-export GITHUB_TARGET_URL=https://my.buildstatus.com/build/3
+export GITHUB_REPO=github-status-updater
+export GITHUB_COMMIT_SHA=XXXXXXXXXXXXXXXX
+export GITHUB_COMMIT_STATE=success
+export GITHUB_COMMIT_CONTEXT=CI
+export GITHUB_COMMIT_DESCRIPTION="Commit status with target URL"
+export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
 
-./dist/bin/github-commit-status
+./dist/bin/github-status-updater
 ```
 
 
@@ -54,11 +53,11 @@ export GITHUB_TARGET_URL=https://my.buildstatus.com/build/3
 [run_locally_with_command_line_args.sh](examples/run_locally_with_command_line_args.sh)
 
 ```sh
-./dist/bin/github-commit-status \
+./dist/bin/github-status-updater \
             -token XXXXXXXXXXXXXXXX \
             -owner cloudposse \
-            -repo github-commit-status \
-            -ref XXXXXXXXXXXXXXX \
+            -repo github-status-updater \
+            -sha XXXXXXXXXXXXXXX \
             -state success \
             -context CI \
             -description "Commit status with target URL" \
@@ -72,7 +71,7 @@ __NOTE__: it will download all `Go` dependencies and then build the program insi
 
 
 ```sh
-docker build --tag github-commit-status  --no-cache=true .
+docker build --tag github-status-updater  --no-cache=true .
 ```
 
 
@@ -84,13 +83,13 @@ docker build --tag github-commit-status  --no-cache=true .
 docker run -i --rm \
             -e GITHUB_TOKEN=XXXXXXXXXXXXXXXX \
             -e GITHUB_OWNER=cloudposse \
-            -e GITHUB_REPO=github-commit-status \
-            -e GITHUB_REF=XXXXXXXXXXXXXXXX \
-            -e GITHUB_STATE=success \
-            -e GITHUB_CONTEXT=CI \
-            -e GITHUB_DESCRIPTION="Commit status with target URL" \
-            -e GITHUB_TARGET_URL=https://my.buildstatus.com/build/3 \
-            github-commit-status
+            -e GITHUB_REPO=github-status-updater \
+            -e GITHUB_COMMIT_SHA=XXXXXXXXXXXXXXXX \
+            -e GITHUB_COMMIT_STATE=success \
+            -e GITHUB_COMMIT_CONTEXT=CI \
+            -e GITHUB_COMMIT_DESCRIPTION="Commit status with target URL" \
+            -e GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3 \
+            github-status-updater
 ```
 
 
@@ -101,23 +100,23 @@ docker run -i --rm \
 ```sh
 export GITHUB_TOKEN=XXXXXXXXXXXXXXXX
 export GITHUB_OWNER=cloudposse
-export GITHUB_REPO=github-commit-status
-export GITHUB_REF=XXXXXXXXXXXXXXXX
-export GITHUB_STATE=success
-export GITHUB_CONTEXT=CI
-export GITHUB_DESCRIPTION="Commit status with target URL"
-export GITHUB_TARGET_URL=https://my.buildstatus.com/build/3
+export GITHUB_REPO=github-status-updater
+export GITHUB_COMMIT_SHA=XXXXXXXXXXXXXXXX
+export GITHUB_COMMIT_STATE=success
+export GITHUB_COMMIT_CONTEXT=CI
+export GITHUB_COMMIT_DESCRIPTION="Commit status with target URL"
+export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
 
 docker run -i --rm \
             -e GITHUB_TOKEN \
             -e GITHUB_OWNER \
             -e GITHUB_REPO \
-            -e GITHUB_REF \
-            -e GITHUB_STATE \
-            -e GITHUB_CONTEXT \
-            -e GITHUB_DESCRIPTION \
-            -e GITHUB_TARGET_URL \
-            github-commit-status
+            -e GITHUB_COMMIT_SHA \
+            -e GITHUB_COMMIT_STATE \
+            -e GITHUB_COMMIT_CONTEXT \
+            -e GITHUB_COMMIT_DESCRIPTION \
+            -e GITHUB_COMMIT_TARGET_URL \
+            github-status-updater
 ```
 
 
@@ -126,7 +125,7 @@ docker run -i --rm \
 [run_docker_with_env_vars_file.sh](examples/run_docker_with_env_vars_file.sh)
 
 ```sh
-docker run -i --rm --env-file ./examples/example.env github-commit-status
+docker run -i --rm --env-file ./examples/example.env github-status-updater
 ```
 
 
@@ -134,7 +133,6 @@ docker run -i --rm --env-file ./examples/example.env github-commit-status
 
 ## References
 * https://github.com/google/go-github
-* https://godoc.org/github.com/google/go-github/github
 * https://docs.docker.com/develop/develop-images/dockerfile_best-practices
 * https://docs.docker.com/engine/reference/commandline/build
 * https://docs.docker.com/engine/reference/commandline/run/
@@ -145,18 +143,18 @@ docker run -i --rm --env-file ./examples/example.env github-commit-status
 
 **Got a question?**
 
-File a GitHub [issue](https://github.com/cloudposse/github-commit-status/issues), send us an [email](mailto:hello@cloudposse.com) or reach out to us on [Gitter](https://gitter.im/cloudposse/).
+File a GitHub [issue](https://github.com/cloudposse/github-status-updater/issues), send us an [email](mailto:hello@cloudposse.com) or reach out to us on [Gitter](https://gitter.im/cloudposse/).
 
 
 ## Contributing
 
 ### Bug Reports & Feature Requests
 
-Please use the [issue tracker](https://github.com/cloudposse/github-commit-status/issues) to report any bugs or file feature requests.
+Please use the [issue tracker](https://github.com/cloudposse/github-status-updater/issues) to report any bugs or file feature requests.
 
 ### Developing
 
-If you are interested in being a contributor and want to get involved in developing `github-commit-status`, we would love to hear from you! Shoot us an [email](mailto:hello@cloudposse.com).
+If you are interested in being a contributor and want to get involved in developing `github-status-updater`, we would love to hear from you! Shoot us an [email](mailto:hello@cloudposse.com).
 
 In general, PRs are welcome. We follow the typical "fork-and-pull" Git workflow.
 
@@ -195,7 +193,7 @@ See [LICENSE](LICENSE) for full details.
 
 ## About
 
-`github-commit-status` is maintained and funded by [Cloud Posse, LLC][website].
+`github-status-updater` is maintained and funded by [Cloud Posse, LLC][website].
 
 Like it? Please let us know at <hello@cloudposse.com>
 

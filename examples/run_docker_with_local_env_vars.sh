@@ -3,7 +3,7 @@
 export GITHUB_ACTION=update_state
 export GITHUB_TOKEN=XXXXXXXXXXXXXXXX
 export GITHUB_OWNER=cloudposse
-export GITHUB_REPO=github-commit-status
+export GITHUB_REPO=github-status-updater
 export GITHUB_REF=XXXXXXXXXXXXXXXX
 export GITHUB_STATE=success
 export GITHUB_CONTEXT="my-ci"
@@ -20,4 +20,4 @@ docker run -i --rm \
         -e GITHUB_CONTEXT \
         -e GITHUB_DESCRIPTION \
         -e GITHUB_TARGET_URL \
-        github-commit-status
+        github-status-updater
