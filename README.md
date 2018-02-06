@@ -3,7 +3,7 @@
 
 Command line utility for updating GitHub commit status.
 
-![GitHub Commit Status](images/GitHub_Commit_Status.png)
+![GitHub Commit Status](images/github-commit-status.png)
 
 
 Useful for CI environments like Travis, Circle or CodeFresh to set more specific commit statuses,
@@ -36,14 +36,15 @@ CGO_ENABLED=0 go build -v -o "./dist/bin/github-status-updater" *.go
 [run_locally_with_env_vars.sh](examples/run_locally_with_env_vars.sh)
 
 ```sh
+export GITHUB_ACTION=update_state
 export GITHUB_TOKEN=XXXXXXXXXXXXXXXX
 export GITHUB_OWNER=cloudposse
 export GITHUB_REPO=github-status-updater
-export GITHUB_COMMIT_SHA=XXXXXXXXXXXXXXXX
-export GITHUB_COMMIT_STATE=success
-export GITHUB_COMMIT_CONTEXT=CI
-export GITHUB_COMMIT_DESCRIPTION="Commit status with target URL"
-export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
+export GITHUB_REF=XXXXXXXXXXXXXXXX
+export GITHUB_STATE=success
+export GITHUB_CONTEXT="my-ci"
+export GITHUB_DESCRIPTION="Commit status with target URL"
+export GITHUB_TARGET_URL="https://my-ci.com/build/1"
 
 ./dist/bin/github-status-updater
 ```
@@ -55,19 +56,20 @@ export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
 
 ```sh
 ./dist/bin/github-status-updater \
-            -token XXXXXXXXXXXXXXXX \
-            -owner cloudposse \
-            -repo github-status-updater \
-            -sha XXXXXXXXXXXXXXX \
-            -state success \
-            -context CI \
-            -description "Commit status with target URL" \
-            -url https://my.buildstatus.com/build/3
+        -action update_state \
+        -token XXXXXXXXXXXXXXXX \
+        -owner cloudposse \
+        -repo github-status-updater \
+        -ref XXXXXXXXXXXXXXX \
+        -state success \
+        -context "my-ci" \
+        -description "Commit status with target URL" \
+        -url "https://my-ci.com/build/1"
 ```
 
 
 
-### Build Docker container
+### Build Docker image
 __NOTE__: it will download all `Go` dependencies and then build the program inside the container (see [`Dockerfile`](Dockerfile))
 
 
@@ -82,15 +84,16 @@ docker build --tag github-status-updater  --no-cache=true .
 
 ```sh
 docker run -i --rm \
-            -e GITHUB_TOKEN=XXXXXXXXXXXXXXXX \
-            -e GITHUB_OWNER=cloudposse \
-            -e GITHUB_REPO=github-status-updater \
-            -e GITHUB_COMMIT_SHA=XXXXXXXXXXXXXXXX \
-            -e GITHUB_COMMIT_STATE=success \
-            -e GITHUB_COMMIT_CONTEXT=CI \
-            -e GITHUB_COMMIT_DESCRIPTION="Commit status with target URL" \
-            -e GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3 \
-            github-status-updater
+        -e GITHUB_ACTION=update_state \
+        -e GITHUB_TOKEN=XXXXXXXXXXXXXXXX \
+        -e GITHUB_OWNER=cloudposse \
+        -e GITHUB_REPO=github-status-updater \
+        -e GITHUB_REF=XXXXXXXXXXXXXXXX \
+        -e GITHUB_STATE=success \
+        -e GITHUB_CONTEXT="my-ci" \
+        -e GITHUB_DESCRIPTION="Commit status with target URL" \
+        -e GITHUB_TARGET_URL="https://my-ci.com/build/1" \
+        github-status-updater
 ```
 
 
@@ -99,25 +102,27 @@ docker run -i --rm \
 [run_docker_with_local_env_vars.sh](examples/run_docker_with_local_env_vars.sh)
 
 ```sh
+export GITHUB_ACTION=update_state
 export GITHUB_TOKEN=XXXXXXXXXXXXXXXX
 export GITHUB_OWNER=cloudposse
 export GITHUB_REPO=github-status-updater
-export GITHUB_COMMIT_SHA=XXXXXXXXXXXXXXXX
-export GITHUB_COMMIT_STATE=success
-export GITHUB_COMMIT_CONTEXT=CI
-export GITHUB_COMMIT_DESCRIPTION="Commit status with target URL"
-export GITHUB_COMMIT_TARGET_URL=https://my.buildstatus.com/build/3
+export GITHUB_REF=XXXXXXXXXXXXXXXX
+export GITHUB_STATE=success
+export GITHUB_CONTEXT="my-ci"
+export GITHUB_DESCRIPTION="Commit status with target URL"
+export GITHUB_TARGET_URL="https://my-ci.com/build/1"
 
 docker run -i --rm \
-            -e GITHUB_TOKEN \
-            -e GITHUB_OWNER \
-            -e GITHUB_REPO \
-            -e GITHUB_COMMIT_SHA \
-            -e GITHUB_COMMIT_STATE \
-            -e GITHUB_COMMIT_CONTEXT \
-            -e GITHUB_COMMIT_DESCRIPTION \
-            -e GITHUB_COMMIT_TARGET_URL \
-            github-status-updater
+        -e GITHUB_ACTION \
+        -e GITHUB_TOKEN \
+        -e GITHUB_OWNER \
+        -e GITHUB_REPO \
+        -e GITHUB_REF \
+        -e GITHUB_STATE \
+        -e GITHUB_CONTEXT \
+        -e GITHUB_DESCRIPTION \
+        -e GITHUB_TARGET_URL \
+        github-status-updater
 ```
 
 
@@ -126,7 +131,7 @@ docker run -i --rm \
 [run_docker_with_env_vars_file.sh](examples/run_docker_with_env_vars_file.sh)
 
 ```sh
-docker run -i --rm --env-file ./examples/example.env github-status-updater
+docker run -i --rm --env-file ./example.env github-status-updater
 ```
 
 
