@@ -51,7 +51,7 @@ func main() {
 	}
 	if *action != "update_state" && *action != "update_branch_protection" {
 		flag.PrintDefaults()
-		log.Fatal("-action or GITHUB_ACTION must be one of 'update_state' or 'update_branch_protection'")
+		log.Fatal("-action or GITHUB_ACTION must 'update_state' or 'update_branch_protection'")
 	}
 	if *token == "" {
 		flag.PrintDefaults()
@@ -73,7 +73,7 @@ func main() {
 	if *action == "update_state" {
 		if *ref == "" {
 			flag.PrintDefaults()
-			log.Fatal("-ref or GITHUB_REF required and must be one of branch name, tag, or commit SHA")
+			log.Fatal("-ref or GITHUB_REF required and must be a commit SHA")
 		}
 		if *state == "" {
 			flag.PrintDefaults()
