@@ -26,7 +26,7 @@ __NOTE__: The module accepts parameters as command-line arguments or as ENV vari
 __NOTE__: `-state` or `GITHUB_STATE` must be one of `error`, `failure`, `pending`, `success`
 
 
-### Build the Go program locally
+### build the Go program locally
 
 ```sh
 go get
@@ -35,7 +35,7 @@ CGO_ENABLED=0 go build -v -o "./dist/bin/github-status-updater" *.go
 ```
 
 
-### Run locally with ENV vars
+### run locally with ENV vars
 [run_locally_with_env_vars.sh](examples/run_locally_with_env_vars.sh)
 
 ```sh
@@ -54,7 +54,7 @@ export GITHUB_TARGET_URL="https://my-ci.com/build/1"
 
 
 
-### Run locally with command-line arguments
+### run locally with command-line arguments
 [run_locally_with_command_line_args.sh](examples/run_locally_with_command_line_args.sh)
 
 ```sh
@@ -72,7 +72,7 @@ export GITHUB_TARGET_URL="https://my-ci.com/build/1"
 
 
 
-### Build the Docker image
+### build the Docker image
 __NOTE__: it will download all `Go` dependencies and then build the program inside the container (see [`Dockerfile`](Dockerfile))
 
 
@@ -82,7 +82,7 @@ docker build --tag github-status-updater  --no-cache=true .
 
 
 
-### Run in a Docker container with ENV vars
+### run in a Docker container with ENV vars
 [run_docker_with_env_vars.sh](examples/run_docker_with_env_vars.sh)
 
 ```sh
@@ -101,7 +101,7 @@ docker run -i --rm \
 
 
 
-### Run in a Docker container with local ENV vars propagated into the container's environment
+### run in a Docker container with local ENV vars propagated into the container's environment
 [run_docker_with_local_env_vars.sh](examples/run_docker_with_local_env_vars.sh)
 
 ```sh
@@ -130,7 +130,7 @@ docker run -i --rm \
 
 
 
-### Run in a Docker container with ENV vars declared in a file
+### run in a Docker container with ENV vars declared in a file
 [run_docker_with_env_vars_file.sh](examples/run_docker_with_env_vars_file.sh)
 
 ```sh
@@ -215,7 +215,7 @@ In case of any build errors, `my-ci` updates the build status to `error` with th
         -ref XXXXXXXXXXXXXXX \
         -state error \
         -context "my-ci" \
-        -description "error" \
+        -description "build error" \
         -url "https://my-ci.com/build/1"
 ```
 
