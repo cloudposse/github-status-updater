@@ -25,7 +25,7 @@ __NOTE__: `-state` or `GITHUB_STATE` must be one of `error`, `failure`, `pending
 ## Usage
 
 
-### Build Go program locally
+### Build the Go program locally
 
 ```sh
 go get
@@ -71,7 +71,7 @@ export GITHUB_TARGET_URL="https://my-ci.com/build/1"
 
 
 
-### Build Docker image
+### Build the Docker image
 __NOTE__: it will download all `Go` dependencies and then build the program inside the container (see [`Dockerfile`](Dockerfile))
 
 
@@ -81,7 +81,7 @@ docker build --tag github-status-updater  --no-cache=true .
 
 
 
-### Run in Docker container with ENV vars
+### Run in a Docker container with ENV vars
 [run_docker_with_env_vars.sh](examples/run_docker_with_env_vars.sh)
 
 ```sh
@@ -100,7 +100,7 @@ docker run -i --rm \
 
 
 
-### Run in Docker container with local ENV vars propagated into the container's environment
+### Run in a Docker container with local ENV vars propagated into the container's environment
 [run_docker_with_local_env_vars.sh](examples/run_docker_with_local_env_vars.sh)
 
 ```sh
@@ -129,7 +129,7 @@ docker run -i --rm \
 
 
 
-### Run in Docker container with ENV vars declared in a file
+### Run in a Docker container with ENV vars declared in a file
 [run_docker_with_env_vars_file.sh](examples/run_docker_with_env_vars_file.sh)
 
 ```sh
