@@ -1,7 +1,7 @@
 # github-commit-status [![Build Status](https://travis-ci.org/cloudposse/github-commit-status.svg)](https://travis-ci.org/cloudposse/github-commit-status)
 
 
-Command line utility for setting or updating GitHub statuses of commits, branches or tags.
+Command line utility for setting or updating GitHub statuses of commits, branches and tags.
 
 ![GitHub Commit Status](images/GitHub_Commit_Status.png)
 
