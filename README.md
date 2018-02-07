@@ -13,7 +13,7 @@ Command line utility for updating GitHub commit statuses and enabling required s
 
 Useful for CI environments to set more specific commit and build statuses, including setting the target URL (the URL of the page representing the status).
 
-__NOTE__: Create a [GitHub token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) with `repo:status` scope
+__NOTE__: Create a [GitHub token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) with `repo:status` and `public_repo` scopes
 
 __NOTE__: The icons in the image above are the avatars of the users for which the GitHub access tokens are issued
 
@@ -159,14 +159,21 @@ docker run -i --rm --env-file ./example.env github-status-updater
 ## GitHub Required Status Checks
 
 
-The module can be used to enable and update required status checks in Pull Requests.
-
-* https://help.github.com/articles/enabling-required-status-checks
+The module can be used to update required status checks for Pull Requests.
 
 This is useful for CI environments to set build statuses with URLs to the build pages.
 
+First, repository administrators need to enforce the branch protection and required status checks before a branch is merged in a pull request or before commits on a local branch can be pushed to the protected remote branch.
 
-To enable status checks for branch `test` of the `github-status-updater` repo, execute the `update_branch_protection` action locally
+* https://help.github.com/articles/enabling-required-status-checks
+
+
+![GitHub Branch Protection Settings](images/github-branch-protection-settings.png)
+
+
+
+
+Then, to add `my-ci` as a status check for branch `test` of the `github-status-updater` repo, execute the `update_branch_protection` action locally
 
 ```ssh
 ./dist/bin/github-status-updater \
@@ -196,11 +203,11 @@ docker run -i --rm \
 After the command executes, status check `my-ci` will be enabled for the branch as shown in the image below
 
 ###
-![GitHub Branch Protection Settings](images/github-branch-protection-settings.png)
+![GitHub Branch Protection Settings](images/github-branch-protection-update.png)
 ###
 
 
-When you create a Pull Request for the branch, `my-ci` gets a notification from GitHub, starts the build, and updates the build status to `pending`
+When you create a pull request for the branch, `my-ci` gets a notification from GitHub, starts the build, and updates the build status to `pending`
 by executing the following command to update the status of the last commit (`ref XXXXXXXXXXXXXXX`)
 
 ```sh
