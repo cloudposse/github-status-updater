@@ -37,10 +37,36 @@ var (
 	repo        = flag.String("repo", os.Getenv("GITHUB_REPO"), "Github repository name")
 	ref         = flag.String("ref", os.Getenv("GITHUB_REF"), "Commit SHA, branch name or tag")
 	state       = flag.String("state", os.Getenv("GITHUB_STATE"), "Commit state. Possible values are 'pending', 'success', 'error' or 'failure'")
-	ctx         = flag.String("context", os.Getenv("GITHUB_CONTEXT"), "Status label")
+	ctx         = flag.String("context", os.Getenv("GITHUB_CONTEXT"), "Status label. Could be the name of a CI environment")
 	description = flag.String("description", os.Getenv("GITHUB_DESCRIPTION"), "Short high level summary of the status")
 	url         = flag.String("url", os.Getenv("GITHUB_TARGET_URL"), "URL of the page representing the status")
 )
+
+func getUserLogins(users []*github.User) []string {
+	res := []string{}
+	if users != nil && len(users) > 0 {
+		for _, user := range users {
+			if user != nil {
+				res = append(res, user.GetLogin())
+			}
+		}
+	}
+
+	return res
+}
+
+func getTeamSlugs(teams []*github.Team) []string {
+	res := []string{}
+	if teams != nil && len(teams) > 0 {
+		for _, team := range teams {
+			if team != nil {
+				res = append(res, team.GetSlug())
+			}
+		}
+	}
+
+	return res
+}
 
 func main() {
 	flag.Parse()
@@ -69,7 +95,7 @@ func main() {
 	http.DefaultClient.Transport = roundTripper{*token}
 	githubClient := github.NewClient(http.DefaultClient)
 
-	// Update status of a branch, tag, or commit
+	// Update status of a commit
 	if *action == "update_state" {
 		if *ref == "" {
 			flag.PrintDefaults()
@@ -103,23 +129,69 @@ func main() {
 		}
 
 		fmt.Println("Updated status", *repoStatus.ID)
-	}
 
-	if *action == "update_branch_protection" {
+	} else if *action == "update_branch_protection" {
 		if *ref == "" {
 			flag.PrintDefaults()
 			log.Fatal("-ref or GITHUB_REF is required and must be a branch name")
 		}
 		if *ctx == "" {
 			flag.PrintDefaults()
-			log.Fatal("-ctx or GITHUB_CONTEXT required")
+			log.Fatal("-context or GITHUB_CONTEXT required")
 		}
 
-		contexts := []string{*ctx}
-		requiredStatusChecks := &github.RequiredStatusChecks{Strict: true, Contexts: contexts}
-		protectionRequest := &github.ProtectionRequest{RequiredStatusChecks: requiredStatusChecks}
+		// https://godoc.org/github.com/google/go-github/github#RepositoriesService.GetBranchProtection
+		// Get the existing branch protection and copy all the fields (to not override them), add the provided context to the existing contexts
+		protection, _, err := githubClient.Repositories.GetBranchProtection(context.Background(), *owner, *repo, *ref)
+		if err != nil {
+			log.Fatal(err)
+		}
 
-		_, _, err := githubClient.Repositories.UpdateBranchProtection(context.Background(), *owner, *repo, *ref, protectionRequest)
+		protectionRequest := &github.ProtectionRequest{}
+
+		var requiredStatusChecks *github.RequiredStatusChecks = nil
+		var requiredPullRequestReviews *github.PullRequestReviewsEnforcement = nil
+		var enforceAdmins *github.AdminEnforcement = nil
+		var restrictions *github.BranchRestrictions = nil
+
+		if protection != nil {
+			requiredStatusChecks = protection.GetRequiredStatusChecks()
+			requiredPullRequestReviews = protection.GetRequiredPullRequestReviews()
+			enforceAdmins = protection.GetEnforceAdmins()
+			restrictions = protection.GetRestrictions()
+		}
+
+		if requiredStatusChecks == nil {
+			requiredStatusChecks = &github.RequiredStatusChecks{Strict: true, Contexts: []string{}}
+		}
+
+		protectionRequest.RequiredStatusChecks = &github.RequiredStatusChecks{Strict: requiredStatusChecks.Strict, Contexts: append(requiredStatusChecks.Contexts, *ctx)}
+
+		if requiredPullRequestReviews != nil {
+			pullRequestReviewsEnforcementRequest := &github.PullRequestReviewsEnforcementRequest{}
+
+			dismissalRestrictionsRequest := &github.DismissalRestrictionsRequest{
+				Users: getUserLogins(requiredPullRequestReviews.DismissalRestrictions.Users),
+				Teams: getTeamSlugs(requiredPullRequestReviews.DismissalRestrictions.Teams),
+			}
+
+			pullRequestReviewsEnforcementRequest.DismissalRestrictionsRequest = dismissalRestrictionsRequest
+			pullRequestReviewsEnforcementRequest.DismissStaleReviews = requiredPullRequestReviews.DismissStaleReviews
+			pullRequestReviewsEnforcementRequest.RequireCodeOwnerReviews = requiredPullRequestReviews.RequireCodeOwnerReviews
+			protectionRequest.RequiredPullRequestReviews = pullRequestReviewsEnforcementRequest
+		}
+
+		if enforceAdmins != nil {
+			protectionRequest.EnforceAdmins = enforceAdmins.Enabled
+		}
+
+		if restrictions != nil {
+			branchRestrictionsRequest := &github.BranchRestrictionsRequest{Users: getUserLogins(restrictions.Users), Teams: getTeamSlugs(restrictions.Teams)}
+			protectionRequest.Restrictions = branchRestrictionsRequest
+		}
+
+		// https://godoc.org/github.com/google/go-github/github#RepositoriesService.UpdateBranchProtection
+		_, _, err = githubClient.Repositories.UpdateBranchProtection(context.Background(), *owner, *repo, *ref, protectionRequest)
 		if err != nil {
 			log.Fatal(err)
 		}

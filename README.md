@@ -21,7 +21,7 @@ __NOTE__: The icons in the image above are the avatars of the users for which th
 
 ## Usage
 
-__NOTE__: The module accepts parameters as command-line arguments or as ENV variables
+__NOTE__: The module accepts parameters as command-line arguments or as ENV variables (or any combination of command-line arguments and ENV vars)
 
 
 | Command-line argument |  ENV var            |  Description                                                                   |
@@ -32,7 +32,7 @@ __NOTE__: The module accepts parameters as command-line arguments or as ENV vari
 | repo                  | GITHUB_REPO         | Github repository name                                                         |
 | ref                   | GITHUB_REF          | Commit SHA, branch name or tag                                                 |
 | state                 | GITHUB_STATE        | Commit state. Possible values are `pending`, `success`, `error` or `failure`   |
-| context               | GITHUB_CONTEXT      | Status label (_e.g._ `my-ci`)                                                  |
+| context               | GITHUB_CONTEXT      | Status label. Could be the name of a CI environment (_e.g._ `my-ci`)           |
 | description           | GITHUB_DESCRIPTION  | Short high level summary of the status                                         |
 | url                   | GITHUB_TARGET_URL   | URL of the page representing the status                                        |
 
@@ -64,6 +64,11 @@ export GITHUB_TARGET_URL="https://my-ci.com/build/1"
 ./dist/bin/github-status-updater
 ```
 
+
+After the above command is executed, the commit status will be updated to `success` with the target URL `https://my-ci.com/build/1` (the green check mark in the image below)
+
+![GitHub Commit Status](images/github-commit-status.png)
+###
 
 
 ### run locally with command-line arguments
