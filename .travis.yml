@@ -1,3 +1,4 @@
+sudo: required
 language: go
 go:
   - 1.9.x
@@ -8,8 +9,15 @@ addons:
     - make
     - curl
 
+env:
+  - DOCKER_IMAGE_NAME=cloudposse/github-status-updater
+
+services:
+- docker
+
 install:
 - make init
+- make travis:docker-login
 - make go:deps-build
 - make go:deps-dev
 - make go-get
@@ -20,12 +28,16 @@ script:
 - make go:lint
 - make go:build-all
 - ls -l release/
+- make docker:build
+
+after_success:
+- make travis:docker-tag-and-push
 
 deploy:
-  provider: releases
-  api_key: "$GITHUB_API_KEY"
-  file_glob: true
-  file: "release/*"
-  skip_cleanup: true
-  on:
-    tags: true
+  - provider: releases
+    api_key: "$GITHUB_API_KEY"
+    file_glob: true
+    file: "release/*"
+    skip_cleanup: true
+    on:
+      tags: true

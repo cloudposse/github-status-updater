@@ -1,4 +1,4 @@
-# github-status-updater [![Build Status](https://travis-ci.org/cloudposse/github-status-updater.svg)](https://travis-ci.org/cloudposse/github-status-updater)
+# github-status-updater [![Build Status](https://travis-ci.org/cloudposse/github-status-updater.svg?branch=master)](https://travis-ci.org/cloudposse/github-status-updater)
 
 
 Command line utility for updating GitHub commit statuses and enabling required status checks for pull requests.
