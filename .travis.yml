@@ -1,3 +1,4 @@
+sudo: required
 language: go
 go:
   - 1.9.x
@@ -8,8 +9,15 @@ addons:
     - make
     - curl
 
+env:
+  - DOCKER_IMAGE_NAME=cloudposse/github-status-updater
+
+services:
+- docker
+
 install:
 - make init
+- make travis:docker-login
 - make go:deps-build
 - make go:deps-dev
 - make go-get
@@ -20,6 +28,10 @@ script:
 - make go:lint
 - make go:build-all
 - ls -l release/
+- make docker:build
+
+after_success:
+- make travis:docker-tag-and-push
 
 deploy:
   provider: releases
@@ -29,3 +41,40 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
+
+  # Deploy to dev (branch)
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    bucket: $DEV_BUCKET
+    skip_cleanup: true
+    upload-dir: $TRAVIS_BRANCH
+    local-dir: public
+    region: us-west-2
+    on:
+      all_branches: true
+
+  # Deploy to dev (tag)
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    bucket: $DEV_BUCKET
+    skip_cleanup: true
+    upload-dir: $TRAVIS_TAG
+    local-dir: public
+    region: us-west-2
+    on:
+      tags: true
+
+  # Deploy to master
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    bucket: $MASTER_BUCKET
+    skip_cleanup: true
+    upload-dir: /
+    local-dir: public
+    region: us-west-2
+    on:
+      branch: master
+
