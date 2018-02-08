@@ -149,10 +149,10 @@ func main() {
 
 		protectionRequest := &github.ProtectionRequest{}
 
-		var requiredStatusChecks *github.RequiredStatusChecks = nil
-		var requiredPullRequestReviews *github.PullRequestReviewsEnforcement = nil
-		var enforceAdmins *github.AdminEnforcement = nil
-		var restrictions *github.BranchRestrictions = nil
+		var requiredStatusChecks *github.RequiredStatusChecks
+		var requiredPullRequestReviews *github.PullRequestReviewsEnforcement
+		var enforceAdmins *github.AdminEnforcement
+		var restrictions *github.BranchRestrictions
 
 		if protection != nil {
 			requiredStatusChecks = protection.GetRequiredStatusChecks()
