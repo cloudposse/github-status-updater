@@ -10,8 +10,6 @@ Useful for CI environments to set more specific commit and build statuses, inclu
 (the URL of the page representing the build status, or the URL of the deployed application).
 
 
-![GitHub Status Checks](images/github-status-check-success.png)
-
 
 ![GitHub Status Checks](images/codefresh-deployment-status-success.png)
 ###
