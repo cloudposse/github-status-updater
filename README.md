@@ -16,7 +16,7 @@ Useful for CI environments to set more specific commit and build statuses, inclu
 ###
 
 
-__NOTE__: Create a [GitHub token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) with `repo:status` and `public_repo` scopes
+__NOTE__: Create a [GitHub token](https://help.github.com/articles/creating-an-access-token-for-command-line-use) with `repo:status` and `public_repo` scopes
 
 __NOTE__: The icons in the images above are the avatars of the users for which the GitHub access tokens are issued
 
@@ -176,8 +176,6 @@ First, repository administrators need to enforce the branch protection and requi
 ![GitHub Branch Protection Settings](images/github-branch-protection-settings.png)
 
 
-
-
 Then, to add `my-ci` as a status check for branch `test` of the `github-status-updater` repo, execute the `update_branch_protection` action locally
 
 ```ssh
@@ -271,6 +269,28 @@ When the build succeeds, `my-ci` updates the build status to `success`
 
 ###
 ![GitHub Status Check Success](images/github-status-check-success.png)
+###
+
+
+## Integrating with [CodeFresh](https://codefresh.io) CI/CD Pipelines
+
+`github-status-updater` can be easily integrated into CI/CD pipelines, especially those that use containers for build steps.
+
+[codefresh.yml](examples/codefresh.yml) shows a complete example of a [CodeFresh](https://docs.codefresh.io/docs/introduction-to-codefresh-pipelines) pipeline which performs the following steps:
+
+* Builds a Docker image for the application
+* Builds [Helm](https://github.com/kubernetes/helm) [chart](https://github.com/kubernetes/charts)
+* Pushes the Docker images to CodeFresh repository
+* Executes `update_branch_protection` action on [`github-status-updater` Docker container](https://hub.docker.com/r/cloudposse/github-status-updater) to add `Staging Environment` as a required status check
+* Executes `update_state` action on [`github-status-updater` Docker container](https://hub.docker.com/r/cloudposse/github-status-updater) to update `Staging Environment` deployment status to `pending`
+* Deploys the Helm chart to a [Kubernetes](https://kubernetes.io) cluster
+* Executes `update_state` action on [`github-status-updater` Docker container](https://hub.docker.com/r/cloudposse/github-status-updater) to update `Staging Environment` deployment status to `success`
+
+
+![GitHub Status Checks](images/codefresh-deployment-status-pending.png)
+###
+
+![GitHub Status Checks](images/codefresh-deployment-status-success.png)
 ###
 
 

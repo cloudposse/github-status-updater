@@ -1,0 +1,136 @@
+version: '1.0'
+
+steps:
+  init-variables:
+    title: Init variables
+    image: alpine
+    commands:
+      - cf_export BUILD_HARNESS_VERSION=feature-helm-chart-ops
+      - cf_export GIT_BRANCH=${{CF_BRANCH}}
+
+  build-image:
+    title: Build image
+    type: build
+    description: Build catalogue
+    image-name: cloudpossedemo/catalogue
+    dockerfile: Dockerfile
+
+  semver:
+    title: Export semantic version
+    image: cloudposse/build-harness:${{BUILD_HARNESS_VERSION}}
+    working_directory: ${{build-image}}
+    commands:
+      - make git:show
+      - make semver:show
+      - make semver:export >> ${{CF_VOLUME_PATH}}/env_vars_to_export
+      - make stages:export
+      - make stages:export >> ${{CF_VOLUME_PATH}}/env_vars_to_export
+
+  build-chart:
+    title: Build Charts
+    image: cloudposse/build-harness:${{BUILD_HARNESS_VERSION}}
+    working_directory: ${{build-image}}
+    commands:
+      - REPO_NAME=cloudpossedemo REPO_ENDPOINT=${{REPO_ENDPOINT}} make helm:repo:add
+      - make helm:repo:add-remote
+      - make helm:chart:clean
+      - make helm:chart:build-all
+      - make helm:chart:publish
+
+  push-image-commit:
+    title: Push image with commit based semver tags
+    type: push
+    candidate: ${{build-image}}
+    tags:
+      - "${{SEMVERSION_COMMIT_SHORT}}"
+      - "${{SEMVERSION_COMMIT}}"
+
+  push-image-branch:
+    title: Push image with branch based semver tags
+    type: push
+    candidate: ${{build-image}}
+    tags:
+      - "${{SEMVERSION_BRANCH}}"
+      - "${{SEMVERSION_BRANCH_COMMIT_SHORT}}"
+      - "${{SEMVERSION_BRANCH_COMMIT}}"
+    when:
+      condition:
+        all:
+          executeForBranch: "'${{SEMVERSION_BRANCH}}' != ''"
+
+  push-image-tag:
+    title: Push image with tag based semver tags
+    type: push
+    candidate: ${{build-image}}
+    tag: "${{SEMVERSION_TAG}}"
+    when:
+      condition:
+        all:
+          executeForTag: "'${{SEMVERSION_TAG}}' != ''"
+
+  push-image-latest:
+    title: Push image with latest tag
+    type: push
+    candidate: ${{build-image}}
+    tag: latest
+    when:
+      condition:
+        all:
+          executeForMasterBranch: "'${{CF_BRANCH}}' == 'master'"
+
+  update-branch-protection:
+    title: Add "Staging Environment" status check to the branch
+    image: cloudposse/github-status-updater
+    environment:
+      - GITHUB_ACTION=update_branch_protection
+      - GITHUB_TOKEN=${{GITHUB_TOKEN}}
+      - GITHUB_OWNER=${{CF_REPO_OWNER}}
+      - GITHUB_REPO=${{CF_REPO_NAME}}
+      - GITHUB_REF=${{CF_BRANCH}}
+      - GITHUB_CONTEXT=Staging Environment
+    when:
+      condition:
+        all:
+          executeForBranch: "'${{SEMVERSION_BRANCH}}' != ''"
+
+  set-deployment-status-to-pending:
+    title: Set "Staging Environment" deployment status to "pending"
+    image: cloudposse/github-status-updater
+    environment:
+      - GITHUB_ACTION=update_state
+      - GITHUB_TOKEN=${{GITHUB_TOKEN}}
+      - GITHUB_OWNER=${{CF_REPO_OWNER}}
+      - GITHUB_REPO=${{CF_REPO_NAME}}
+      - GITHUB_REF=${{CF_REVISION}}
+      - GITHUB_CONTEXT=Staging Environment
+      - GITHUB_STATE=pending
+      - GITHUB_DESCRIPTION=Deploying changes to ${{FEATURE}} namespace
+      - GITHUB_TARGET_URL=http://master.demo.cloudposse.org
+
+  deploy-helm:
+    title: Deploy Helm chart
+    image: cloudposse/cf-plugin-helm:0.2.0-fix-working-with-repo
+    environment:
+      - CHART_NAME=catalogue
+      - RELEASE_NAME=catalogue-${{CF_BRANCH_TAG_NORMALIZED}}
+      - KUBE_CONTEXT=cluster-4
+      - NAMESPACE=${{NAMESPACE}}
+      - CHART_VERSION=${{SEMVERSION_BRANCH}}
+      - CHART_REPO_URL=${{REPO_ENDPOINT}}
+      - WAIT=false
+      - TIMEOUT=1200
+      - custom_fullnameOverride=catalogue
+
+  set-deployment-status-to-success:
+    title: Set "Staging Environment" deployment status to "success"
+    image: cloudposse/github-status-updater
+    environment:
+      - GITHUB_ACTION=update_state
+      - GITHUB_TOKEN=${{GITHUB_TOKEN}}
+      - GITHUB_OWNER=${{CF_REPO_OWNER}}
+      - GITHUB_REPO=${{CF_REPO_NAME}}
+      - GITHUB_REF=${{CF_REVISION}}
+      - GITHUB_CONTEXT=Staging Environment
+      - GITHUB_STATE=success
+      - GITHUB_DESCRIPTION=Deployed to ${{FEATURE}} namespace
+      - GITHUB_TARGET_URL=http://master.demo.cloudposse.org
