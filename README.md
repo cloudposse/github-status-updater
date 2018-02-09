@@ -161,7 +161,7 @@ docker run -i --rm --env-file ./example.env github-status-updater
 ```
 
 
-##
+###
 ## GitHub Required Status Checks
 
 
@@ -273,6 +273,7 @@ When the build succeeds, `my-ci` updates the build status to `success`
 ###
 
 
+###
 ## Integrating with [CodeFresh](https://codefresh.io) CI/CD Pipelines
 
 `github-status-updater` can be easily integrated into CI/CD pipelines, especially those that use containers for build steps.
