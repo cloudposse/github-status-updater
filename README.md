@@ -8,6 +8,9 @@ Command line utility for updating GitHub commit statuses and enabling required s
 
 
 ![GitHub Status Checks](images/github-status-check-success.png)
+
+
+![GitHub Status Checks](images/codefresh-deployment-status-success.png)
 ###
 
 
