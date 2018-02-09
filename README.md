@@ -10,14 +10,13 @@ Useful for CI environments to set more specific commit and build statuses, inclu
 (the URL of the page representing the build status, or the URL of the deployed application).
 
 
-
 ![GitHub Status Checks](images/codefresh-deployment-status-success.png)
 ###
 
 
 __NOTE__: Create a [GitHub token](https://help.github.com/articles/creating-an-access-token-for-command-line-use) with `repo:status` and `public_repo` scopes
 
-__NOTE__: The icons in the images above are the avatars of the users for which the GitHub access tokens are issued
+__NOTE__: The icons in the image above are the avatars of the users for which the GitHub access tokens are issued
 
 
 
