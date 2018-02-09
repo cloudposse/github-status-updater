@@ -285,7 +285,7 @@ When the build succeeds, `my-ci` updates the build status to `success`
 * Executes `update_branch_protection` action on `github-status-updater` [Docker container](https://hub.docker.com/r/cloudposse/github-status-updater) to add `Staging Environment` as a required status check
 * Executes `update_state` action on `github-status-updater` [Docker container](https://hub.docker.com/r/cloudposse/github-status-updater) to update `Staging Environment` deployment status to `pending`
 * Deploys the Helm chart to a [Kubernetes](https://kubernetes.io) cluster
-* Executes `update_state` action on [`github-status-updater` Docker container](https://hub.docker.com/r/cloudposse/github-status-updater) to update `Staging Environment` deployment status to `success`
+* Executes `update_state` action on `github-status-updater` [Docker container](https://hub.docker.com/r/cloudposse/github-status-updater) to update `Staging Environment` deployment status to `success`
 
 
 ![GitHub Status Checks](images/codefresh-deployment-status-pending.png)
