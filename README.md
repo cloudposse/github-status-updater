@@ -18,13 +18,15 @@ Useful for CI environments to set more specific commit and build statuses, inclu
 
 __NOTE__: Create a [GitHub token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) with `repo:status` and `public_repo` scopes
 
-__NOTE__: The icons in the image above are the avatars of the users for which the GitHub access tokens are issued
+__NOTE__: The icons in the images above are the avatars of the users for which the GitHub access tokens are issued
 
 
 
 ## Usage
 
-__NOTE__: The module accepts parameters as command-line arguments or as ENV variables (or any combination of command-line arguments and ENV vars)
+__NOTE__: The module accepts parameters as command-line arguments or as ENV variables
+(or any combination of command-line arguments and ENV vars).
+Command-line arguments take precedence over ENV vars.
 
 
 | Command-line argument |  ENV var            |  Description                                                                   |
