@@ -280,10 +280,10 @@ When the build succeeds, `my-ci` updates the build status to `success`
 [codefresh.yml](examples/codefresh.yml) shows a complete example of a [CodeFresh](https://docs.codefresh.io/docs/introduction-to-codefresh-pipelines) pipeline which performs the following steps:
 
 * Builds a Docker image for the application
-* Builds [Helm](https://github.com/kubernetes/helm) [chart](https://github.com/kubernetes/charts)
-* Pushes the Docker images to CodeFresh repository
-* Executes `update_branch_protection` action on [`github-status-updater` Docker container](https://hub.docker.com/r/cloudposse/github-status-updater) to add `Staging Environment` as a required status check
-* Executes `update_state` action on [`github-status-updater` Docker container](https://hub.docker.com/r/cloudposse/github-status-updater) to update `Staging Environment` deployment status to `pending`
+* Builds a [Helm](https://github.com/kubernetes/helm) [chart](https://github.com/kubernetes/charts)
+* Pushes the Docker images (for commits, branches and tags) to CodeFresh repository
+* Executes `update_branch_protection` action on `github-status-updater` [Docker container](https://hub.docker.com/r/cloudposse/github-status-updater) to add `Staging Environment` as a required status check
+* Executes `update_state` action on `github-status-updater` [Docker container](https://hub.docker.com/r/cloudposse/github-status-updater) to update `Staging Environment` deployment status to `pending`
 * Deploys the Helm chart to a [Kubernetes](https://kubernetes.io) cluster
 * Executes `update_state` action on [`github-status-updater` Docker container](https://hub.docker.com/r/cloudposse/github-status-updater) to update `Staging Environment` deployment status to `success`
 
