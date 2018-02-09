@@ -6,7 +6,8 @@ Command line utility for updating GitHub commit statuses and enabling required s
 * https://developer.github.com/v3/repos/statuses
 * https://help.github.com/articles/enabling-required-status-checks
 
-Useful for CI environments to set more specific commit and build statuses, including setting the target URL (the URL of the page representing the status).
+Useful for CI environments to set more specific commit and build statuses, including setting the target URL
+(the URL of the build page representing the status, or the URL of the deployed application).
 
 
 ![GitHub Status Checks](images/github-status-check-success.png)
