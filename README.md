@@ -305,6 +305,10 @@ When the build succeeds, `my-ci` updates the build status to `success`
 * https://docs.docker.com/develop/develop-images/dockerfile_best-practices
 * https://docs.docker.com/engine/reference/commandline/build
 * https://docs.docker.com/engine/reference/commandline/run
+* https://codefresh.io
+* https://docs.codefresh.io/docs/introduction-to-codefresh-pipelines
+* https://github.com/kubernetes/helm
+* https://github.com/kubernetes/charts
 
 
 
