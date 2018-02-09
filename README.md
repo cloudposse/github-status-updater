@@ -6,6 +6,8 @@ Command line utility for updating GitHub commit statuses and enabling required s
 * https://developer.github.com/v3/repos/statuses
 * https://help.github.com/articles/enabling-required-status-checks
 
+Useful for CI environments to set more specific commit and build statuses, including setting the target URL (the URL of the page representing the status).
+
 
 ![GitHub Status Checks](images/github-status-check-success.png)
 
@@ -13,8 +15,6 @@ Command line utility for updating GitHub commit statuses and enabling required s
 ![GitHub Status Checks](images/codefresh-deployment-status-success.png)
 ###
 
-
-Useful for CI environments to set more specific commit and build statuses, including setting the target URL (the URL of the page representing the status).
 
 __NOTE__: Create a [GitHub token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) with `repo:status` and `public_repo` scopes
 
