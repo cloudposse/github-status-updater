@@ -6,14 +6,15 @@ Command line utility for updating GitHub commit statuses and enabling required s
 * https://developer.github.com/v3/repos/statuses
 * https://help.github.com/articles/enabling-required-status-checks
 
+Useful for CI environments to set more specific commit and build statuses, including setting the target URL
+(the URL of the page representing the build status, or the URL of the deployed application).
 
-![GitHub Status Checks](images/github-status-check-success.png)
+
+![GitHub Status Checks](images/codefresh-deployment-status-success.png)
 ###
 
 
-Useful for CI environments to set more specific commit and build statuses, including setting the target URL (the URL of the page representing the status).
-
-__NOTE__: Create a [GitHub token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) with `repo:status` and `public_repo` scopes
+__NOTE__: Create a [GitHub token](https://help.github.com/articles/creating-an-access-token-for-command-line-use) with `repo:status` and `public_repo` scopes
 
 __NOTE__: The icons in the image above are the avatars of the users for which the GitHub access tokens are issued
 
@@ -21,7 +22,9 @@ __NOTE__: The icons in the image above are the avatars of the users for which th
 
 ## Usage
 
-__NOTE__: The module accepts parameters as command-line arguments or as ENV variables (or any combination of command-line arguments and ENV vars)
+__NOTE__: The module accepts parameters as command-line arguments or as ENV variables
+(or any combination of command-line arguments and ENV vars).
+Command-line arguments take precedence over ENV vars.
 
 
 | Command-line argument |  ENV var            |  Description                                                                   |
@@ -155,7 +158,8 @@ docker run -i --rm --env-file ./example.env github-status-updater
 ```
 
 
-##
+###
+###
 ## GitHub Required Status Checks
 
 
@@ -169,8 +173,6 @@ First, repository administrators need to enforce the branch protection and requi
 
 
 ![GitHub Branch Protection Settings](images/github-branch-protection-settings.png)
-
-
 
 
 Then, to add `my-ci` as a status check for branch `test` of the `github-status-updater` repo, execute the `update_branch_protection` action locally
@@ -269,6 +271,29 @@ When the build succeeds, `my-ci` updates the build status to `success`
 ###
 
 
+###
+## Integrating with [CodeFresh](https://codefresh.io) CI/CD Pipelines
+
+`github-status-updater` can be easily integrated into CI/CD pipelines, especially those that use containers for build steps.
+
+[codefresh.yml](examples/codefresh.yml) shows a complete example of a [CodeFresh](https://docs.codefresh.io/docs/introduction-to-codefresh-pipelines) pipeline which performs the following steps:
+
+* Builds a Docker image for the application
+* Builds a [Helm](https://github.com/kubernetes/helm) [chart](https://github.com/kubernetes/charts)
+* Pushes the Docker images (for commits, branches and tags) to CodeFresh repository
+* Executes `update_branch_protection` action on `github-status-updater` [Docker container](https://hub.docker.com/r/cloudposse/github-status-updater) to add `Staging Environment` as a required status check
+* Executes `update_state` action on `github-status-updater` [Docker container](https://hub.docker.com/r/cloudposse/github-status-updater) to update `Staging Environment` deployment status to `pending`
+* Deploys the Helm chart to a [Kubernetes](https://kubernetes.io) cluster
+* Executes `update_state` action on `github-status-updater` [Docker container](https://hub.docker.com/r/cloudposse/github-status-updater) to update `Staging Environment` deployment status to `success`
+
+
+![GitHub Status Checks](images/codefresh-deployment-status-pending.png)
+###
+
+![GitHub Status Checks](images/codefresh-deployment-status-success.png)
+###
+
+
 
 ## References
 * https://github.com/google/go-github
@@ -279,6 +304,10 @@ When the build succeeds, `my-ci` updates the build status to `success`
 * https://docs.docker.com/develop/develop-images/dockerfile_best-practices
 * https://docs.docker.com/engine/reference/commandline/build
 * https://docs.docker.com/engine/reference/commandline/run
+* https://codefresh.io
+* https://docs.codefresh.io/docs/introduction-to-codefresh-pipelines
+* https://github.com/kubernetes/helm
+* https://github.com/kubernetes/charts
 
 
 

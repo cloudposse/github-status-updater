@@ -128,7 +128,7 @@ func main() {
 			log.Fatal(err)
 		}
 
-		fmt.Println("Updated status", *repoStatus.ID)
+		fmt.Println("github-status-updater: Updated status", *repoStatus.ID)
 
 	} else if *action == "update_branch_protection" {
 		if *ref == "" {
@@ -196,6 +196,6 @@ func main() {
 			log.Fatal(err)
 		}
 
-		fmt.Println("Updated branch protection")
+		fmt.Println("github-status-updater: Updated branch protection")
 	}
 }
