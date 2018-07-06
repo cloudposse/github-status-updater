@@ -1,0 +1,342 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+# Name of this project
+name: github-status-updater
+
+# Logo for this project
+#logo: docs/logo.png
+
+# License of this project
+license: "APACHE2"
+
+# Canonical GitHub repo
+github_repo: cloudposse/github-status-updater
+
+# Badges to display
+badges:
+  - name: "Build Status"
+    image: "https://travis-ci.org/cloudposse/github-status-updater.svg?branch=master"
+    url: "https://travis-ci.org/cloudposse/github-status-updater"
+  - name: "Latest Release"
+    image: "https://img.shields.io/github/release/cloudposse/github-status-updater.svg"
+    url: "https://travis-ci.org/cloudposse/github-status-updater/releases"
+  - name: "Slack Community"
+    image: "https://slack.cloudposse.com/badge.svg"
+    url: "https://slack.cloudposse.com"
+
+# Short description of this project
+description: |-
+  Command line utility for updating GitHub commit statuses and enabling required status checks for pull requests.
+
+  * https://developer.github.com/v3/repos/statuses
+  * https://help.github.com/articles/enabling-required-status-checks
+
+  Useful for CI environments to set more specific commit and build statuses, including setting the target URL
+  (the URL of the page representing the build status, or the URL of the deployed application).
+
+
+  ![GitHub Status Checks](images/codefresh-deployment-status-success.png)
+  ###
+
+
+  __NOTE__: Create a [GitHub token](https://help.github.com/articles/creating-an-access-token-for-command-line-use) with `repo:status` and `public_repo` scopes
+
+  __NOTE__: The icons in the image above are the avatars of the users for which the GitHub access tokens are issued
+
+# How to use this project
+usage: |-
+  __NOTE__: The module accepts parameters as command-line arguments or as ENV variables
+  (or any combination of command-line arguments and ENV vars).
+  Command-line arguments take precedence over ENV vars.
+
+
+  | Command-line argument |  ENV var            |  Description                                                                   |
+  |:----------------------|:--------------------|:-------------------------------------------------------------------------------|
+  | action                | GITHUB_ACTION       | Action to perform: `update_state` or `update_branch_protection`                |
+  | token                 | GITHUB_TOKEN        | Github access token                                                            |
+  | owner                 | GITHUB_OWNER        | Github repository owner                                                        |
+  | repo                  | GITHUB_REPO         | Github repository name                                                         |
+  | ref                   | GITHUB_REF          | Commit SHA, branch name or tag                                                 |
+  | state                 | GITHUB_STATE        | Commit state. Possible values are `pending`, `success`, `error` or `failure`   |
+  | context               | GITHUB_CONTEXT      | Status label. Could be the name of a CI environment (_e.g._ `my-ci`)           |
+  | description           | GITHUB_DESCRIPTION  | Short high level summary of the status                                         |
+  | url                   | GITHUB_TARGET_URL   | URL of the page representing the status                                        |
+
+
+
+  ### build the Go program locally
+
+  ```sh
+  go get
+
+  CGO_ENABLED=0 go build -v -o "./dist/bin/github-status-updater" *.go
+  ```
+
+
+  ### run locally with ENV vars
+  [run_locally_with_env_vars.sh](examples/run_locally_with_env_vars.sh)
+
+  ```sh
+  export GITHUB_ACTION=update_state
+  export GITHUB_TOKEN=XXXXXXXXXXXXXXXX
+  export GITHUB_OWNER=cloudposse
+  export GITHUB_REPO=github-status-updater
+  export GITHUB_REF=XXXXXXXXXXXXXXXX
+  export GITHUB_STATE=success
+  export GITHUB_CONTEXT="my-ci"
+  export GITHUB_DESCRIPTION="Commit status with target URL"
+  export GITHUB_TARGET_URL="https://my-ci.com/build/1"
+
+  ./dist/bin/github-status-updater
+  ```
+
+
+  After the above command is executed, the commit status will be updated to `success` with the target URL `https://my-ci.com/build/1` (the green check mark in the image below)
+
+  ![GitHub Commit Status](images/github-commit-status.png)
+  ###
+
+
+  ### run locally with command-line arguments
+  [run_locally_with_command_line_args.sh](examples/run_locally_with_command_line_args.sh)
+
+  ```sh
+  ./dist/bin/github-status-updater \
+          -action update_state \
+          -token XXXXXXXXXXXXXXXX \
+          -owner cloudposse \
+          -repo github-status-updater \
+          -ref XXXXXXXXXXXXXXX \
+          -state success \
+          -context "my-ci" \
+          -description "Commit status with target URL" \
+          -url "https://my-ci.com/build/1"
+  ```
+
+
+
+  ### build the Docker image
+  __NOTE__: it will download all `Go` dependencies and then build the program inside the container (see [`Dockerfile`](Dockerfile))
+
+
+  ```sh
+  docker build --tag github-status-updater  --no-cache=true .
+  ```
+
+
+
+  ### run in a Docker container with ENV vars
+  [run_docker_with_env_vars.sh](examples/run_docker_with_env_vars.sh)
+
+  ```sh
+  docker run -i --rm \
+          -e GITHUB_ACTION=update_state \
+          -e GITHUB_TOKEN=XXXXXXXXXXXXXXXX \
+          -e GITHUB_OWNER=cloudposse \
+          -e GITHUB_REPO=github-status-updater \
+          -e GITHUB_REF=XXXXXXXXXXXXXXXX \
+          -e GITHUB_STATE=success \
+          -e GITHUB_CONTEXT="my-ci" \
+          -e GITHUB_DESCRIPTION="Commit status with target URL" \
+          -e GITHUB_TARGET_URL="https://my-ci.com/build/1" \
+          github-status-updater
+  ```
+
+
+
+  ### run in a Docker container with local ENV vars propagated into the container's environment
+  [run_docker_with_local_env_vars.sh](examples/run_docker_with_local_env_vars.sh)
+
+  ```sh
+  export GITHUB_ACTION=update_state
+  export GITHUB_TOKEN=XXXXXXXXXXXXXXXX
+  export GITHUB_OWNER=cloudposse
+  export GITHUB_REPO=github-status-updater
+  export GITHUB_REF=XXXXXXXXXXXXXXXX
+  export GITHUB_STATE=success
+  export GITHUB_CONTEXT="my-ci"
+  export GITHUB_DESCRIPTION="Commit status with target URL"
+  export GITHUB_TARGET_URL="https://my-ci.com/build/1"
+
+  docker run -i --rm \
+          -e GITHUB_ACTION \
+          -e GITHUB_TOKEN \
+          -e GITHUB_OWNER \
+          -e GITHUB_REPO \
+          -e GITHUB_REF \
+          -e GITHUB_STATE \
+          -e GITHUB_CONTEXT \
+          -e GITHUB_DESCRIPTION \
+          -e GITHUB_TARGET_URL \
+          github-status-updater
+  ```
+
+
+
+  ### run in a Docker container with ENV vars declared in a file
+  [run_docker_with_env_vars_file.sh](examples/run_docker_with_env_vars_file.sh)
+
+  ```sh
+  docker run -i --rm --env-file ./example.env github-status-updater
+  ```
+
+
+  ###
+  ###
+  ## GitHub Required Status Checks
+
+
+  The module can be used to update required status checks for Pull Requests.
+
+  This is useful for CI environments to set build statuses with URLs to the build pages.
+
+  First, repository administrators need to enforce the branch protection and required status checks before a branch is merged in a pull request or before commits on a local branch can be pushed to the protected remote branch.
+
+  * https://help.github.com/articles/enabling-required-status-checks
+
+
+  ![GitHub Branch Protection Settings](images/github-branch-protection-settings.png)
+
+
+  Then, to add `my-ci` as a status check for branch `test` of the `github-status-updater` repo, execute the `update_branch_protection` action locally
+
+  ```ssh
+  ./dist/bin/github-status-updater \
+          -action update_branch_protection \
+          -token XXXXXXXXXXXXXXXXXXXXXX \
+          -owner cloudposse \
+          -repo github-status-updater \
+          -ref test \
+          -context my-ci
+  ```
+
+
+  or in a Docker container
+
+  ```ssh
+  docker run -i --rm \
+          -e GITHUB_ACTION=update_branch_protection \
+          -e GITHUB_TOKEN=XXXXXXXXXXXXXXXX \
+          -e GITHUB_OWNER=cloudposse \
+          -e GITHUB_REPO=github-status-updater \
+          -e GITHUB_REF=test \
+          -e GITHUB_CONTEXT="my-ci" \
+          github-status-updater
+  ```
+
+
+  After the command executes, status check `my-ci` will be enabled for the branch as shown in the image below
+
+  ###
+  ![GitHub Branch Protection Settings](images/github-branch-protection-update.png)
+  ###
+
+
+  When you create a pull request for the branch, `my-ci` gets a notification from GitHub, starts the build, and updates the build status to `pending`
+  by executing the following command to update the status of the last commit (`ref XXXXXXXXXXXXXXX`)
+
+  ```sh
+  ./dist/bin/github-status-updater \
+          -action update_state \
+          -token XXXXXXXXXXXXXXXX \
+          -owner cloudposse \
+          -repo github-status-updater \
+          -ref XXXXXXXXXXXXXXX \
+          -state pending \
+          -context "my-ci" \
+          -description "still building..." \
+          -url "https://my-ci.com/build/1"
+  ```
+
+  ###
+  ![GitHub Status Check Pending](images/github-status-check-pending.png)
+  ###
+
+
+  In case of any build errors, `my-ci` updates the build status to `error` with the error message in the `description` parameter
+
+  ```sh
+  ./dist/bin/github-status-updater \
+          -action update_state \
+          -token XXXXXXXXXXXXXXXX \
+          -owner cloudposse \
+          -repo github-status-updater \
+          -ref XXXXXXXXXXXXXXX \
+          -state error \
+          -context "my-ci" \
+          -description "build error" \
+          -url "https://my-ci.com/build/1"
+  ```
+
+
+  ###
+  ![GitHub Status Check Error](images/github-status-check-error.png)
+  ###
+
+
+  When the build succeeds, `my-ci` updates the build status to `success`
+
+  ```sh
+  ./dist/bin/github-status-updater \
+          -action update_state \
+          -token XXXXXXXXXXXXXXXX \
+          -owner cloudposse \
+          -repo github-status-updater \
+          -ref XXXXXXXXXXXXXXX \
+          -state success \
+          -context "my-ci" \
+          -description "build completed" \
+          -url "https://my-ci.com/build/1"
+  ```
+
+  ###
+  ![GitHub Status Check Success](images/github-status-check-success.png)
+  ###
+
+
+  ###
+  ## Integrating with [CodeFresh](https://codefresh.io) CI/CD Pipelines
+
+  `github-status-updater` can be easily integrated into CI/CD pipelines, especially those that use containers for build steps.
+
+  [codefresh.yml](examples/codefresh.yml) shows a complete example of a [CodeFresh](https://docs.codefresh.io/docs/introduction-to-codefresh-pipelines) pipeline which performs the following steps:
+
+  * Builds a Docker image for the application
+  * Builds a [Helm](https://github.com/kubernetes/helm) [chart](https://github.com/kubernetes/charts)
+  * Pushes the Docker images (for commits, branches and tags) to CodeFresh repository
+  * Executes `update_branch_protection` action on `github-status-updater` [Docker container](https://hub.docker.com/r/cloudposse/github-status-updater) to add `Staging Environment` as a required status check
+  * Executes `update_state` action on `github-status-updater` [Docker container](https://hub.docker.com/r/cloudposse/github-status-updater) to update `Staging Environment` deployment status to `pending`
+  * Deploys the Helm chart to a [Kubernetes](https://kubernetes.io) cluster
+  * Executes `update_state` action on `github-status-updater` [Docker container](https://hub.docker.com/r/cloudposse/github-status-updater) to update `Staging Environment` deployment status to `success`
+
+
+  ![GitHub Status Checks](images/codefresh-deployment-status-pending.png)
+  ###
+
+  ![GitHub Status Checks](images/codefresh-deployment-status-success.png)
+  ###
+
+
+
+  ## References
+  * https://github.com/google/go-github
+  * https://godoc.org/github.com/google/go-github/github
+  * https://help.github.com/articles/enabling-required-status-checks
+  * https://developer.github.com/v3/repos/statuses
+  * https://developer.github.com/v3/guides/building-a-ci-server
+  * https://docs.docker.com/develop/develop-images/dockerfile_best-practices
+  * https://docs.docker.com/engine/reference/commandline/build
+  * https://docs.docker.com/engine/reference/commandline/run
+  * https://codefresh.io
+  * https://docs.codefresh.io/docs/introduction-to-codefresh-pipelines
+  * https://github.com/kubernetes/helm
+  * https://github.com/kubernetes/charts
+
+# Contributors to this project
+contributors:
+  - name: "Andriy Knysh"
+    github: "aknysh"
