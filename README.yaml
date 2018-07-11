@@ -23,7 +23,7 @@ badges:
     url: "https://travis-ci.org/cloudposse/github-status-updater"
   - name: "Latest Release"
     image: "https://img.shields.io/github/release/cloudposse/github-status-updater.svg"
-    url: "https://travis-ci.org/cloudposse/github-status-updater/releases"
+    url: "https://github.com/cloudposse/github-status-updater/releases/latest"
   - name: "Slack Community"
     image: "https://slack.cloudposse.com/badge.svg"
     url: "https://slack.cloudposse.com"
@@ -68,7 +68,7 @@ usage: |-
 
 
 
-  ### build the Go program locally
+  ### Build the Go program locally
 
   ```sh
   go get
@@ -77,7 +77,7 @@ usage: |-
   ```
 
 
-  ### run locally with ENV vars
+  ### Run locally with ENV vars
   [run_locally_with_env_vars.sh](examples/run_locally_with_env_vars.sh)
 
   ```sh
@@ -101,7 +101,7 @@ usage: |-
   ###
 
 
-  ### run locally with command-line arguments
+  ### Run locally with command-line arguments
   [run_locally_with_command_line_args.sh](examples/run_locally_with_command_line_args.sh)
 
   ```sh
@@ -119,7 +119,7 @@ usage: |-
 
 
 
-  ### build the Docker image
+  ### Build the Docker image
   __NOTE__: it will download all `Go` dependencies and then build the program inside the container (see [`Dockerfile`](Dockerfile))
 
 
@@ -128,8 +128,9 @@ usage: |-
   ```
 
 
+  ### Run with Docker
 
-  ### run in a Docker container with ENV vars
+  Run the `github-status-updater` in a Docker container with ENV vars
   [run_docker_with_env_vars.sh](examples/run_docker_with_env_vars.sh)
 
   ```sh
@@ -148,7 +149,9 @@ usage: |-
 
 
 
-  ### run in a Docker container with local ENV vars propagated into the container's environment
+  ### Run with Docker
+
+  Run the `github-status-updater` in a Docker container with local ENV vars propagated into the container's environment.
   [run_docker_with_local_env_vars.sh](examples/run_docker_with_local_env_vars.sh)
 
   ```sh
@@ -176,17 +179,15 @@ usage: |-
   ```
 
 
+  ### Run with Docker
 
-  ### run in a Docker container with ENV vars declared in a file
+  Run the `github-status-updater` in a Docker container with ENV vars declared in a file
   [run_docker_with_env_vars_file.sh](examples/run_docker_with_env_vars_file.sh)
 
   ```sh
   docker run -i --rm --env-file ./example.env github-status-updater
   ```
 
-
-  ###
-  ###
   ## GitHub Required Status Checks
 
 
@@ -320,21 +321,43 @@ usage: |-
   ![GitHub Status Checks](images/codefresh-deployment-status-success.png)
   ###
 
-
-
-  ## References
-  * https://github.com/google/go-github
-  * https://godoc.org/github.com/google/go-github/github
-  * https://help.github.com/articles/enabling-required-status-checks
-  * https://developer.github.com/v3/repos/statuses
-  * https://developer.github.com/v3/guides/building-a-ci-server
-  * https://docs.docker.com/develop/develop-images/dockerfile_best-practices
-  * https://docs.docker.com/engine/reference/commandline/build
-  * https://docs.docker.com/engine/reference/commandline/run
-  * https://codefresh.io
-  * https://docs.codefresh.io/docs/introduction-to-codefresh-pipelines
-  * https://github.com/kubernetes/helm
-  * https://github.com/kubernetes/charts
+references:
+  - name: "go-github"
+    description: "Go library for accessing the GitHub API"
+    url: "https://github.com/google/go-github"
+  - name: "docs go-github"
+    description: "Package github provides a client for using the GitHub API."
+    url: "https://godoc.org/github.com/google/go-github/github"
+  - name: "enabling-required-status-checks"
+    description: "Repository administrators can enforce required status checks before a branch is merged in a pull request or before commits on a local branch can be pushed to the protected remote branch."
+    url: "https://help.github.com/articles/enabling-required-status-checks"
+  - name: "Statuses API"
+    description: "The status API allows external services to mark commits with an error, failure, pending, or success state, which is then reflected in pull requests involving those commits."
+    url: "https://developer.github.com/v3/repos/statuses"
+  - name: "Building a CI server"
+    description: "This guide will use that API to demonstrate a setup that you can use."
+    url: "https://developer.github.com/v3/guides/building-a-ci-server"
+  - name: "Best practices for writing Dockerfiles"
+    description: "This document covers recommended best practices and methods for building efficient images."
+    url: "https://docs.docker.com/develop/develop-images/dockerfile_best-practices"
+  - name: "Docker build documentation"
+    description: "How to build an image from a Dockerfile"
+    url: "https://docs.docker.com/engine/reference/commandline/build"
+  - name: "Docker run documentation"
+    description: "How to run a command in a new container"
+    url: "https://docs.docker.com/engine/reference/commandline/run"
+  - name: "Codefresh"
+    description: "Codefresh is the first continuous delivery platform built for Kubernetes."
+    url: "https://codefresh.io"
+  - name: "Introduction to Codefresh pipelines"
+    description: "Understand how Codefresh pipelines work"
+    url: "https://docs.codefresh.io/docs/introduction-to-codefresh-pipelines"
+  - name: "Kubernetes Helm"
+    description: "Helm is a tool for managing Kubernetes charts. Charts are packages of pre-configured Kubernetes resources."
+    url: "https://github.com/kubernetes/helm"
+  - name: "Helm Charts"
+    description: "Use this repository to submit official Charts for Kubernetes Helm."
+    url: "https://github.com/kubernetes/charts"
 
 # Contributors to this project
 contributors:
