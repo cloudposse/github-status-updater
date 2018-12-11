@@ -3,6 +3,7 @@
 dist/bin/*
 github-status-updater
 .build-harness
+build-harness
 
 # Binaries for programs and plugins
 *.exe
