@@ -170,9 +170,12 @@ func main() {
 		if requiredPullRequestReviews != nil {
 			pullRequestReviewsEnforcementRequest := &github.PullRequestReviewsEnforcementRequest{}
 
+			users := getUserLogins(requiredPullRequestReviews.DismissalRestrictions.Users)
+			teams := getTeamSlugs(requiredPullRequestReviews.DismissalRestrictions.Teams)
+
 			dismissalRestrictionsRequest := &github.DismissalRestrictionsRequest{
-				Users: getUserLogins(requiredPullRequestReviews.DismissalRestrictions.Users),
-				Teams: getTeamSlugs(requiredPullRequestReviews.DismissalRestrictions.Teams),
+				Users: &users,
+				Teams: &teams,
 			}
 
 			pullRequestReviewsEnforcementRequest.DismissalRestrictionsRequest = dismissalRestrictionsRequest
