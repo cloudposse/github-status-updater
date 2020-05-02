@@ -181,6 +181,7 @@ func main() {
 			pullRequestReviewsEnforcementRequest.DismissalRestrictionsRequest = dismissalRestrictionsRequest
 			pullRequestReviewsEnforcementRequest.DismissStaleReviews = requiredPullRequestReviews.DismissStaleReviews
 			pullRequestReviewsEnforcementRequest.RequireCodeOwnerReviews = requiredPullRequestReviews.RequireCodeOwnerReviews
+			pullRequestReviewsEnforcementRequest.RequiredApprovingReviewCount = requiredPullRequestReviews.RequiredApprovingReviewCount
 			protectionRequest.RequiredPullRequestReviews = pullRequestReviewsEnforcementRequest
 		}
 
