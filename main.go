@@ -1,11 +1,13 @@
 package main
 
 import (
+	"crypto/tls"
 	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/google/go-github/github"
 	"golang.org/x/net/context"
@@ -13,11 +15,13 @@ import (
 
 type roundTripper struct {
 	accessToken string
+	insecure    bool
 }
 
 func (rt roundTripper) RoundTrip(r *http.Request) (*http.Response, error) {
 	r.Header.Set("Authorization", fmt.Sprintf("token %s", rt.accessToken))
-	return http.DefaultTransport.RoundTrip(r)
+	transport := http.Transport {TLSClientConfig: &tls.Config{InsecureSkipVerify: rt.insecure}}
+	return transport.RoundTrip(r)
 }
 
 func isValidState(state string) bool {
@@ -40,6 +44,9 @@ var (
 	ctx         = flag.String("context", os.Getenv("GITHUB_CONTEXT"), "Status label. Could be the name of a CI environment")
 	description = flag.String("description", os.Getenv("GITHUB_DESCRIPTION"), "Short high level summary of the status")
 	url         = flag.String("url", os.Getenv("GITHUB_TARGET_URL"), "URL of the page representing the status")
+	baseURL     = flag.String("baseURL", os.Getenv("GITHUB_BASE_URL"), "Base URL of github enterprise")
+	uploadURL   = flag.String("uploadURL", os.Getenv("GITHUB_UPLOAD_URL"), "Upload URL of github enterprise")
+	insecure    = flag.Bool("insecure", strings.ToLower(os.Getenv("GITHUB_INSECURE")) == "true", "Ignore SSL certificate check")
 )
 
 func getUserLogins(users []*github.User) []string {
@@ -92,8 +99,21 @@ func main() {
 		log.Fatal("-repo or GITHUB_REPO required")
 	}
 
-	http.DefaultClient.Transport = roundTripper{*token}
-	githubClient := github.NewClient(http.DefaultClient)
+	http.DefaultClient.Transport = roundTripper{*token, *insecure}
+	var githubClient *github.Client
+	if *baseURL != "" || *uploadURL != "" {
+		if *baseURL == "" {
+			flag.PrintDefaults()
+			log.Fatal("-baseURL or GITHUB_BASE_URL required when using -uploadURL or GITHUB_UPLOAD_URL")
+		}
+		if *uploadURL == "" {
+			flag.PrintDefaults()
+			log.Fatal("-uploadURL or GITHUB_UPLOAD_URL required when using -baseURL or GITHUB_BASE_URL")
+		}
+		githubClient, _ = github.NewEnterpriseClient(*baseURL, *uploadURL, http.DefaultClient)
+	} else {
+		githubClient = github.NewClient(http.DefaultClient)
+	}
 
 	// Update status of a commit
 	if *action == "update_state" {
