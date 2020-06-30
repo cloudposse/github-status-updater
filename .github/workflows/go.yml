@@ -16,7 +16,7 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@v1
       - name: 'Get dependencies'
-        run: "pwd; ls -al; go get"
+        run: "pwd; ls -al; echo GOPATH=$GOPATH; go get"
       # Build Go binaries
       - name: 'Build Go binaries'
         uses: cloudposse/actions/go/build@0.7.0
