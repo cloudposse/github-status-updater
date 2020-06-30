@@ -15,8 +15,8 @@ jobs:
       # Checkout the repo
       - name: 'Checkout'
         uses: actions/checkout@v1
-      - name: go get
-        run: "go get"
+      - name: 'Get dependencies'
+        run: "pwd; ls -al; go get"
       # Build Go binaries
       - name: 'Build Go binaries'
         uses: cloudposse/actions/go/build@0.7.0
@@ -43,7 +43,7 @@ jobs:
           OUTPUT_PATH: ${{ github.workspace }}/release/${{ github.event.repository.name }}_*
 
       # Attach Go binaries to GitHub Release
-      - name: 'Attach Go binaries to GitHub Release'
+      - name: 'Attach artifacts to GitHub Release'
         if: ${{ github.event_name == 'release' }}
         uses: cloudposse/actions/github/release-assets@0.7.0
         env:
