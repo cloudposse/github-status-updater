@@ -10,14 +10,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+      GOPATH: ${{ github.workspace }}
     steps:
       # Checkout the repo
       - name: 'Checkout'
         uses: actions/checkout@v1
       - name: 'Get dependencies'
-        env:
-          GOPATH: ${{ github.workspace }}
         run: "pwd; ls -al; echo GOPATH=$GOPATH; go get"
       # Build Go binaries
       - name: 'Build Go binaries'
