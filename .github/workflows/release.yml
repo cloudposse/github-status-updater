@@ -20,6 +20,7 @@ jobs:
       - name: 'Build Go binaries'
         uses: cloudposse/actions/go/build@0.7.0
         env:
+          GO111MODULE: off
           # Architectures to build for
           GOX_OSARCH: >-
             windows/386
