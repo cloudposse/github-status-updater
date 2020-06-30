@@ -1,4 +1,4 @@
-name: 'release'
+name: 'go'
 
 on:
   release:
@@ -8,8 +8,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  go:
-    name: 'Build Go binaries and attach to GitHub Release'
+  build:
     runs-on: ubuntu-latest
 
     steps:
