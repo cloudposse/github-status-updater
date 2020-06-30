@@ -10,19 +10,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      GOPATH: ${{ github.workspace }}
     steps:
       # Checkout the repo
       - name: 'Checkout'
         uses: actions/checkout@v1
-      - name: 'Get dependencies'
-        run: "pwd; ls -al; echo GOPATH=$GOPATH; go get"
       # Build Go binaries
       - name: 'Build Go binaries'
         uses: cloudposse/actions/go/build@0.7.0
         env:
-          GO111MODULE: off
+          GO111MODULE: on
           # Architectures to build for
           GOX_OSARCH: >-
             windows/386
