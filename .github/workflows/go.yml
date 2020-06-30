@@ -15,7 +15,8 @@ jobs:
       # Checkout the repo
       - name: 'Checkout'
         uses: actions/checkout@v1
-
+      - name: go get
+        run: "go get"
       # Build Go binaries
       - name: 'Build Go binaries'
         uses: cloudposse/actions/go/build@0.7.0

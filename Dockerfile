@@ -1,4 +1,4 @@
-FROM golang:1.11.2 as builder
+FROM golang:1.13.3-buster as builder
 RUN mkdir -p /go/src/github.com/cloudposse/github-status-updater
 WORKDIR /go/src/github.com/cloudposse/github-status-updater
 COPY . .
