@@ -38,7 +38,11 @@ jobs:
             openbsd/386
             openbsd/amd64
           OUTPUT_PATH: ${{ github.workspace }}/release/${{ github.event.repository.name }}_*
-
+      - name: 'Upload artifacts'
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ github.event.repository.name }}
+          path: ${{ github.workspace }}/release/*
       # Attach Go binaries to GitHub Release
       - name: 'Attach artifacts to GitHub Release'
         if: ${{ github.event_name == 'release' }}
