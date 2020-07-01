@@ -1,4 +1,0 @@
-package: github.com/cloudposse/github-status-updater
-import:
-  - package: github.com/google/go-github/github
-  - package: golang.org/x/net/context
