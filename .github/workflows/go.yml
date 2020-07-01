@@ -37,7 +37,7 @@ jobs:
             freebsd/386
             openbsd/386
             openbsd/amd64
-          OUTPUT_PATH: ${{ github.workspace }}/release/${{ github.event.repository.name }}_*
+          OUTPUT_PATH: ${{ github.workspace }}/release/${{ github.event.repository.name }}_
       - name: 'Upload artifacts'
         uses: actions/upload-artifact@v2
         with:
