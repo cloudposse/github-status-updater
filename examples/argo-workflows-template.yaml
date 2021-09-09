@@ -9,12 +9,14 @@ spec:
   - name: generic-github-notifier
     inputs:
       parameters:
+      - name: organization
       - name: repository
       - name: revision
+      - name: context
+        value: 'argo-workflows'
       - name: state
       - name: target_url
       - name: description
-      - name: organisation
     container:
       image: cloudposse/github-status-updater:0.5.0
       env:
@@ -27,14 +29,14 @@ spec:
       - name: GITHUB_DESCRIPTION
         value: '{{inputs.parameters.description}}'
       - name: GITHUB_CONTEXT
-        value: 'argo-workflows'
+        value: '{{inputs.parameters.context}}'
       - name: GITHUB_TOKEN
         valueFrom:
           secretKeyRef:
             key: 'github-automation-token'
             name: 'github-automation-secret'
       - name: GITHUB_OWNER
-        value: '{{inputs.parameters.organisation}}'
+        value: '{{inputs.parameters.organization}}'
       - name: GITHUB_REPO
         value: '{{inputs.parameters.repository}}'
       - name: GITHUB_REF
