@@ -1,0 +1,52 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: github-notifier
+spec:
+  entrypoint: generic-github-notifier
+  templates:
+  - name: generic-github-notifier
+    inputs:
+      parameters:
+      - name: repository
+      - name: revision
+      - name: state
+      - name: target_url
+      - name: description
+      - name: organisation
+    container:
+      image: cloudposse/github-status-updater:0.5.0
+      env:
+      - name: GITHUB_ACTION
+        value: 'update_state'
+      - name: GITHUB_STATE
+        value: '{{inputs.parameters.state}}'
+      - name: GITHUB_TARGET_URL
+        value: '{{inputs.parameters.target_url}}'
+      - name: GITHUB_DESCRIPTION
+        value: '{{inputs.parameters.description}}'
+      - name: GITHUB_CONTEXT
+        value: 'argo-workflows'
+      - name: GITHUB_TOKEN
+        valueFrom:
+          secretKeyRef:
+            key: 'github-automation-token'
+            name: 'github-automation-secret'
+      - name: GITHUB_OWNER
+        value: '{{inputs.parameters.organisation}}'
+      - name: GITHUB_REPO
+        value: '{{inputs.parameters.repository}}'
+      - name: GITHUB_REF
+        value: '{{inputs.parameters.revision}}'
+      - name: GITHUB_BASE_URL
+        value: https://private-github-instance/api/v3/
+      - name: GITHUB_UPLOAD_URL
+        value: https://private-github-instance/api/uploads
+      - name: GITHUB_INSECURE
+        value: 'false'
+      resources:
+        requests:
+          cpu: 1m
+          memory: 8Mi
+      activeDeadlineSeconds: 300
