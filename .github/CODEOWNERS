@@ -1,0 +1,11 @@
+# Use this file to define individuals or teams that are responsible for code in a repository.
+# Read more: <https://help.github.com/articles/about-codeowners/>
+#
+# Order is important: the last matching pattern has the highest precedence
+
+# These owners will be the default owners for everything
+*             @cloudposse/engineering
+
+# Cloud Posse Admins must review all changes to CODEOWNERS or the mergify configuration
+.github/mergify.yml @cloudposse/admins
+.github/CODEOWNERS  @cloudposse/admins

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"crypto/tls"
 	"flag"
 	"fmt"
@@ -9,8 +10,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/google/go-github/github"
-	"golang.org/x/net/context"
+	"github.com/google/go-github/v42/github"
 )
 
 type roundTripper struct {
@@ -20,7 +20,7 @@ type roundTripper struct {
 
 func (rt roundTripper) RoundTrip(r *http.Request) (*http.Response, error) {
 	r.Header.Set("Authorization", fmt.Sprintf("token %s", rt.accessToken))
-	transport := http.Transport {TLSClientConfig: &tls.Config{InsecureSkipVerify: rt.insecure}}
+	transport := http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: rt.insecure}}
 	return transport.RoundTrip(r)
 }
 
