@@ -42,7 +42,7 @@ jobs:
         if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.ref_name != 'master')
         uses: actions/upload-artifact@v3
         with:
-          name: slack-notifier
+          name: github-status-updater
           path: dist/*
           retention-days: 3
 
