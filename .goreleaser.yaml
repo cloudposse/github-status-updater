@@ -19,10 +19,6 @@ builds:
       - arm
       - arm64
 
-source:
-  enabled: true
-  name_template: 'sources'
-
 archives:
   - format: binary
     name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}'
