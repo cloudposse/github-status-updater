@@ -1,14 +1,13 @@
-name: build
+name: Feature Branch
 
 on:
   workflow_dispatch:
 
-  release:
+  pull_request:
     types:
-      - published
-
-permissions:
-  contents: write
+      - opened
+      - synchronize
+      - reopened
 
 jobs:
   build:
@@ -24,11 +23,16 @@ jobs:
         with:
           go-version: '1.20'
 
-      - name: Public Release
+      - name: Test Snapshot Release
         uses: goreleaser/goreleaser-action@v4
         with:
           distribution: goreleaser
           version: latest
-          args: release --clean
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          args: release --clean --snapshot
+
+      - name: Upload Test Release Assets
+        uses: actions/upload-artifact@v3
+        with:
+          name: github-status-updater
+          path: dist/*
+          retention-days: 3
