@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	netUrl "net/url"
 	"os"
 	"strings"
 
@@ -20,8 +21,25 @@ type roundTripper struct {
 
 func (rt roundTripper) RoundTrip(r *http.Request) (*http.Response, error) {
 	r.Header.Set("Authorization", fmt.Sprintf("token %s", rt.accessToken))
-	transport := http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: rt.insecure}}
+	transport := rt.getTransport()
 	return transport.RoundTrip(r)
+}
+
+func (rt roundTripper) getTransport() *http.Transport {
+	proxyURLStr := os.Getenv("HTTPS_PROXY")
+	transport := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: rt.insecure},
+	}
+
+	if proxyURLStr != "" {
+		proxyURL, err := netUrl.Parse(proxyURLStr)
+		if err != nil {
+			log.Fatal("failed to parse HTTPS_PROXY:", err)
+		}
+		transport.Proxy = http.ProxyURL(proxyURL)
+	}
+
+	return transport
 }
 
 func isValidState(state string) bool {
