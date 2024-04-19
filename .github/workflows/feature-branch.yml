@@ -9,8 +9,26 @@ on:
       - synchronize
       - reopened
 
+  push:
+    branches:
+      - main
+      - release/v*
+    paths-ignore:
+      - '.github/**'
+      - 'docs/**'
+      - 'examples/**'
+      - 'test/**'
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  build:
+  ci-go:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,7 +37,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
 
@@ -31,8 +49,33 @@ jobs:
           args: release --config ./dev.goreleaser.yaml --clean --snapshot
 
       - name: Upload Test Release Assets
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: github-status-updater
           path: dist/*
           retention-days: 3
+
+  ci-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout source code at current commit"
+        uses: actions/checkout@v4
+
+      - name: Build
+        id: build
+        uses: cloudposse/github-action-docker-build-push@1.15.1
+        with:
+          registry: ghcr.io
+          organization: "${{ github.event.repository.owner.login }}"
+          repository: "${{ github.event.repository.name }}"
+          login: "${{ github.actor }}"
+          password: "${{ secrets.GITHUB_TOKEN }}"
+          platforms: linux/amd64,linux/arm64
+
+  release:
+    if: github.event_name == 'push'
+    needs: [ci-go, ci-docker]
+    uses: cloudposse/.github/.github/workflows/shared-go-auto-release.yml@main
+    with:
+      publish: true
+    secrets: inherit
