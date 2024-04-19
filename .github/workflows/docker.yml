@@ -2,12 +2,17 @@ name: "docker"
 on:
   push:
     branches:
-      - master
+      - main
+      - release/v*
+    paths-ignore:
+      - '.github/**'
+      - 'docs/**'
+      - 'examples/**'
+      - 'test/**'
+
   pull_request: 
     types: [opened, synchronize, reopened]
-  release:
-    types:
-      - created
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -23,3 +28,11 @@ jobs:
           registry: registry-1.docker.io
           tag_with_ref: true
           tag_with_sha: true
+
+  release:
+    if: github.event_name == 'push'
+    needs: build-and-push
+    uses: cloudposse/.github/.github/workflows/shared-go-auto-release.yml@main
+    with:
+      publish: true
+    secrets: inherit
