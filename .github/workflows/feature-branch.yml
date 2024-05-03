@@ -78,4 +78,5 @@ jobs:
     uses: cloudposse/.github/.github/workflows/shared-go-auto-release.yml@main
     with:
       publish: true
+      format: binary
     secrets: inherit
