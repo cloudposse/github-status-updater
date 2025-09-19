@@ -27,7 +27,7 @@ func (rt roundTripper) RoundTrip(r *http.Request) (*http.Response, error) {
 
 func (rt roundTripper) getTransport() *http.Transport {
 	proxyURLStr := os.Getenv("HTTPS_PROXY")
-	transport := &http.Transport{
+	transport := http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: rt.insecure},
 	}
 
