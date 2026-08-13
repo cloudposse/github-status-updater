@@ -1,3 +1,5 @@
+version: 2
+
 builds:
   - env:
       # goreleaser does not work with CGO, it could also complicate
@@ -24,7 +26,7 @@ builds:
       - '-s -w'
 
 archives:
-  - format: binary
+  - formats: [binary]
     name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
 
 checksum:
@@ -36,4 +38,4 @@ release:
 # draft: true
 
 changelog:
-  skip: true
+  disable: true
