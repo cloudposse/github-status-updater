@@ -65,6 +65,8 @@ jobs:
         id: build
         uses: cloudposse/github-action-docker-build-push@02993d675b44dcc7082e6de7485c1ff8740bce9d # v3.1.0
         with:
+          # v3's step-summary generation fails on images without a CMD (jq join on null); disable until fixed upstream
+          summary: "false"
           registry: ghcr.io
           organization: "${{ github.event.repository.owner.login }}"
           repository: "${{ github.event.repository.name }}"
